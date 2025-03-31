@@ -1,6 +1,7 @@
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { ThemedText } from "./ThemedText";
+import { FontAwesome } from "@expo/vector-icons";
 
 enum EntryType {
 	PARKING = "parking",
@@ -9,6 +10,7 @@ enum EntryType {
 }
 
 export function EntryList() {
+	// TODO: Replace later
 	const entries = [
 		{
 			id: 1,
@@ -48,10 +50,33 @@ export function EntryList() {
 	return (
 		<ScrollView>
 			<View>
+				<View style={{ ...styles.iconCircle }}>
+					<FontAwesome name="car" size={24} color="pink" />
+				</View>
+				<View style={{ ...styles.iconCircle }}>
+					<FontAwesome name="shield" size={24} color="pink" />
+				</View>
+				<View style={{ ...styles.iconCircle }}>
+					<FontAwesome name="money" size={24} color="pink" />
+				</View>
 				{entries.map((e, i) => (
-					<ThemedText>{e.type}</ThemedText>
+					<View key={i}>
+						<ThemedText>{e.type}</ThemedText>
+					</View>
 				))}
 			</View>
 		</ScrollView>
 	);
 }
+
+const styles = StyleSheet.create({
+	iconCircle: {
+		width: 50,
+		height: 50,
+		borderRadius: 25,
+		backgroundColor: "#f0f0f0",
+		justifyContent: "center",
+		alignItems: "center",
+		margin: 5,
+	},
+});
