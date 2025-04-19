@@ -47,20 +47,21 @@ export function EntryList() {
 		},
 	];
 
+	// Map entry types to icons
+	const iconMap: Record<EntryType, "car" | "shield" | "money"> = {
+		[EntryType.PARKING]: "car",
+		[EntryType.WARDEN]: "shield",
+		[EntryType.FINE]: "money",
+	};
+
 	return (
 		<ScrollView>
 			<View>
-				<View style={{ ...styles.iconCircle }}>
-					<FontAwesome name="car" size={24} color="pink" />
-				</View>
-				<View style={{ ...styles.iconCircle }}>
-					<FontAwesome name="shield" size={24} color="pink" />
-				</View>
-				<View style={{ ...styles.iconCircle }}>
-					<FontAwesome name="money" size={24} color="pink" />
-				</View>
 				{entries.map((e, i) => (
 					<View key={i}>
+						<View style={styles.iconCircle}>
+							<FontAwesome name={iconMap[e.type]} size={24} color="pink" />
+						</View>
 						<ThemedText>{e.type}</ThemedText>
 					</View>
 				))}
