@@ -57,14 +57,34 @@ export function EntryList() {
 	return (
 		<ScrollView>
 			<View>
-				{entries.map((e, i) => (
-					<View key={i}>
-						<View style={styles.iconCircle}>
-							<FontAwesome name={iconMap[e.type]} size={24} color="pink" />
+				{entries.map((e, i) => {
+					// Duration in minutes
+					const duration = Math.round(
+						(e.dateEnd.getTime() - e.dateStart.getTime()) / (1000 * 60)
+					);
+					const hours = Math.floor(duration / 60);
+					const minutes = duration % 60;
+
+					return (
+						<View key={i} style={styles.row}>
+							<View style={styles.iconCircle}>
+								<FontAwesome name={iconMap[e.type]} size={24} color="pink" />
+							</View>
+							<View>
+								<ThemedText>{e.type}</ThemedText>
+								<ThemedText>{e.dateStart.toLocaleString()}</ThemedText>
+								{/* Remove later */}
+								<ThemedText>{e.dateEnd.toLocaleString()}</ThemedText>
+								<ThemedText>{e.location}</ThemedText>
+							</View>
+							<View>
+								<ThemedText>
+									{minutes === 0 ? `${hours} h` : `${hours} h ${minutes} m`}
+								</ThemedText>
+							</View>
 						</View>
-						<ThemedText>{e.type}</ThemedText>
-					</View>
-				))}
+					);
+				})}
 			</View>
 		</ScrollView>
 	);
@@ -79,5 +99,8 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		margin: 5,
+	},
+	row: {
+		flexDirection: "row",
 	},
 });
