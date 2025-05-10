@@ -1,7 +1,8 @@
-import { StyleSheet, ScrollView, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, View, Pressable } from "react-native";
 import { ThemedText } from "./ThemedText";
 import React, { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 enum EntryType {
 	PARKING = "Parking",
@@ -11,11 +12,40 @@ enum EntryType {
 
 export function EntryForm() {
 	const [name, setName] = useState("");
+
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [dropdownValue, setDropdownValue] = useState(null);
 	const [dropdownItems, setDropdownItems] = useState(
 		Object.values(EntryType).map((type) => ({ label: type, value: type }))
 	);
+
+	const [date, setDate] = useState(new Date());
+	const [showDatePicker, setShowDatePicker] = useState(false);
+	const [showTimePicker, setShowTimePicker] = useState(false);
+
+	const onChangeDate = (event: any, selectedDate?: Date) => {
+		// Update selected date
+		if (event.type === "set" && selectedDate) {
+			setDate(selectedDate);
+			setShowDatePicker(false);
+			setShowTimePicker(true);
+			// Close date picker
+		} else {
+			setShowDatePicker(false);
+		}
+	};
+
+	const onChangeTime = (event: any, selectedTime?: Date) => {
+		// Update selected date with time
+		if (event.type === "set" && selectedTime) {
+			const updatedDate = new Date(date);
+			updatedDate.setHours(selectedTime.getHours());
+			updatedDate.setMinutes(selectedTime.getMinutes());
+			setDate(updatedDate);
+		}
+		// Close time picker
+		setShowTimePicker(false);
+	};
 
 	return (
 		<View>
@@ -35,10 +65,28 @@ export function EntryForm() {
 				onChangeText={setName}
 				value={name}
 				placeholder="Optional"
-				style={{ borderWidth: 1, padding: 8, borderRadius: 4 }}
+				style={styles.input}
 			></TextInput>
+
+			<ThemedText>Start date</ThemedText>
+
+			<Pressable onPress={() => setShowDatePicker(true)}>
+				<TextInput
+					value={date.toLocaleString()}
+					style={styles.input}
+					editable={false}
+				></TextInput>
+			</Pressable>
+			{showDatePicker && (
+				<DateTimePicker value={date} mode="date" onChange={onChangeDate} />
+			)}
+			{showTimePicker && (
+				<DateTimePicker value={date} mode="time" onChange={onChangeTime} />
+			)}
 		</View>
 	);
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	input: { borderWidth: 1, padding: 8, borderRadius: 4 },
+});
