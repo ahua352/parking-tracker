@@ -84,7 +84,9 @@ export function EntryList() {
 									<ThemedText style={styles.dateStart}>
 										{e.dateStart.toLocaleString()}
 									</ThemedText>
-									<ThemedText>{e.location}</ThemedText>
+									<View style={styles.locationContainer}>
+										<ThemedText>{e.location}</ThemedText>
+									</View>
 								</View>
 							</View>
 							<View style={styles.duration}>
@@ -136,5 +138,8 @@ const styles = StyleSheet.create({
 	},
 	dateStart: {
 		marginTop: 4,
+	},
+	locationContainer: {
+		flex: 1,
 	},
 });
