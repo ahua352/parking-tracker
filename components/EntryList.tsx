@@ -4,9 +4,9 @@ import { ThemedText } from "./ThemedText";
 import { FontAwesome } from "@expo/vector-icons";
 
 enum EntryType {
-	PARKING = "parking",
-	WARDEN = "warden",
-	FINE = "fine",
+	PARKING = "Parking",
+	WARDEN = "Warden",
+	FINE = "Fine",
 }
 
 export function EntryList() {
@@ -37,8 +37,8 @@ export function EntryList() {
 		{
 			id: 3,
 			dateStart: new Date("2023-10-03T10:30:00"),
-			dateEnd: new Date("2023-10-03T12:30:00"),
-			location: "789 Random St, Some Place, Some City",
+			dateEnd: new Date("2023-10-03T12:45:00"),
+			location: "789 Random St, Some Place, Some City, Some Long Name",
 			geocode: [-36.8607564, 174.77781],
 			type: EntryType.FINE,
 			name: "",
@@ -67,17 +67,20 @@ export function EntryList() {
 
 					return (
 						<View key={i} style={styles.row}>
-							<View style={styles.iconCircle}>
-								<FontAwesome name={iconMap[e.type]} size={24} color="pink" />
+							<View style={styles.leftSection}>
+								<View style={styles.iconCircle}>
+									<FontAwesome name={iconMap[e.type]} size={24} color="pink" />
+								</View>
+								<View style={styles.textContainer}>
+									<ThemedText type="subtitle">{e.type}</ThemedText>
+									<ThemedText style={styles.dateStart}>
+										{e.dateStart.toLocaleString()}
+									</ThemedText>
+									<ThemedText>{e.location}</ThemedText>
+								</View>
 							</View>
-							<View>
-								<ThemedText>{e.type}</ThemedText>
-								<ThemedText>{e.dateStart.toLocaleString()}</ThemedText>
-								{/* Remove later */}
-								<ThemedText>{e.dateEnd.toLocaleString()}</ThemedText>
-								<ThemedText>{e.location}</ThemedText>
-							</View>
-							<View>
+
+							<View style={styles.duration}>
 								<ThemedText>
 									{minutes === 0 ? `${hours} h` : `${hours} h ${minutes} m`}
 								</ThemedText>
@@ -98,9 +101,30 @@ const styles = StyleSheet.create({
 		backgroundColor: "#f0f0f0",
 		justifyContent: "center",
 		alignItems: "center",
-		margin: 5,
+		margin: 8,
 	},
 	row: {
 		flexDirection: "row",
+		backgroundColor: "slategrey",
+		justifyContent: "space-between",
+		marginBottom: 16,
+		padding: 8,
+		borderRadius: 8,
+	},
+	leftSection: {
+		flexDirection: "row",
+		flex: 1,
+	},
+	textContainer: {
+		marginLeft: 8,
+		flexWrap: "wrap",
+		flex: 1,
+	},
+	duration: {
+		marginRight: 8,
+		flexShrink: 0,
+	},
+	dateStart: {
+		marginTop: 4,
 	},
 });
