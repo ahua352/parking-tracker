@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, View, Pressable } from "react-native";
+import { StyleSheet, TextInput, View, Pressable, Button } from "react-native";
 import { ThemedText } from "./ThemedText";
 import React, { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -12,6 +12,8 @@ enum EntryType {
 
 export function EntryForm() {
 	const [name, setName] = useState("");
+	const [location, setLocation] = useState("");
+	const [notes, setNotes] = useState("");
 
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [dropdownValue, setDropdownValue] = useState(null);
@@ -89,7 +91,7 @@ export function EntryForm() {
 					value={startDate.toLocaleString()}
 					style={styles.input}
 					editable={false}
-				></TextInput>
+				/>
 			</Pressable>
 
 			<ThemedText>End date</ThemedText>
@@ -103,7 +105,7 @@ export function EntryForm() {
 					value={endDate.toLocaleString()}
 					style={styles.input}
 					editable={false}
-				></TextInput>
+				/>
 			</Pressable>
 
 			{showDatePicker && (
@@ -112,6 +114,36 @@ export function EntryForm() {
 			{showTimePicker && (
 				<DateTimePicker value={startDate} mode="time" onChange={onChangeTime} />
 			)}
+
+			<ThemedText>Location</ThemedText>
+			<TextInput
+				onChangeText={setLocation}
+				value={location}
+				placeholder="Enter location"
+				style={styles.input}
+			/>
+
+			<ThemedText>Notes</ThemedText>
+			<TextInput
+				onChangeText={setNotes}
+				value={notes}
+				placeholder="Optional"
+				style={styles.input}
+			/>
+
+			<Button
+				title="Save"
+				onPress={() => {
+					console.log("=~=~=~=~=~=");
+					console.log("Saving entry...");
+					console.log("Entry type:", dropdownValue);
+					console.log("Name:", name);
+					console.log("Start date:", startDate);
+					console.log("End date:", endDate);
+					console.log("Location:", location);
+					console.log("Notes:", notes);
+				}}
+			/>
 		</View>
 	);
 }
