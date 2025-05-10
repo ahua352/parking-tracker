@@ -7,15 +7,17 @@ import {
 	Appearance,
 } from "react-native";
 import { ThemedText } from "./ThemedText";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { FontAwesome } from "@expo/vector-icons";
 import { EntryType, iconMap } from "@/constants/EntryConstants";
+import { useEntryContext } from "@/contexts/EntryContext";
 
 export function EntryForm() {
-	const colorScheme = Appearance.getColorScheme();
+	const { addEntry, entries } = useEntryContext();
 
+	const colorScheme = Appearance.getColorScheme();
 	const styles = StyleSheet.create({
 		input: {
 			borderWidth: 1,
@@ -113,8 +115,27 @@ export function EntryForm() {
 			return;
 		} else {
 			console.log("No errors");
+			// TODO: Fix ID, geocode, and files
+			const entry = {
+				id: Math.floor(Math.random() * 1000000),
+				dateStart: startDate,
+				dateEnd: endDate,
+				location: location,
+				geocode: [0, 0] as [number, number],
+				type: dropdownValue,
+				name: name,
+				notes: notes,
+				files: [],
+			};
+
+			addEntry(entry);
 		}
 	};
+
+	// TODO: Remove this
+	useEffect(() => {
+		console.log("Entries updated:", entries);
+	}, [entries]);
 
 	return (
 		<View style={styles.container}>

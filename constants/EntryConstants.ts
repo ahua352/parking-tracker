@@ -10,3 +10,15 @@ export const iconMap: Record<EntryType, "car" | "shield" | "money"> = {
 	[EntryType.WARDEN]: "shield",
 	[EntryType.FINE]: "money",
 };
+
+export interface Entry {
+	id: number;
+	dateStart: Date;
+	dateEnd: Date;
+	location: string;
+	geocode: [number, number];
+	type: EntryType;
+	name: string;
+	notes: string;
+	files: string[];
+}
