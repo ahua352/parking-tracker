@@ -32,9 +32,11 @@ export function EntryForm() {
 	});
 
 	const [name, setName] = useState("");
-	const [location, setLocation] = useState("");
 	const [notes, setNotes] = useState("");
+	const [location, setLocation] = useState("");
+	const [locationError, setLocationError] = useState(false);
 
+	const [dropdownError, setDropdownError] = useState(false);
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [dropdownValue, setDropdownValue] = useState(null);
 	const [dropdownItems, setDropdownItems] = useState(
@@ -91,10 +93,33 @@ export function EntryForm() {
 		setShowTimePicker(false);
 	};
 
+	const onSave = () => {
+		console.log("=~=~=~=~=~=");
+		console.log("Saving entry...");
+		console.log("Entry type:", dropdownValue);
+		console.log("Name:", name);
+		console.log("Start date:", startDate);
+		console.log("End date:", endDate);
+		console.log("Location:", location);
+		console.log("Notes:", notes);
+
+		// Check for errors
+		// Note: Didn't check for date errors, as dates are automatically populated
+		setDropdownError(!dropdownValue ? true : false);
+		setLocationError(!location ? true : false);
+
+		if (!dropdownValue || !location) {
+			console.log("Error: Missing required fields");
+			return;
+		} else {
+			console.log("No errors");
+		}
+	};
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.field}>
-				<ThemedText style={styles.fieldTitle}>Entry type</ThemedText>
+				<ThemedText style={styles.fieldTitle}>Entry type*</ThemedText>
 				<DropDownPicker
 					open={dropdownOpen}
 					value={dropdownValue}
@@ -104,6 +129,7 @@ export function EntryForm() {
 					setItems={setDropdownItems}
 					placeholder="Select an option"
 					theme={colorScheme === "dark" ? "DARK" : "LIGHT"}
+					style={{ borderColor: dropdownError ? "red" : "black" }}
 				/>
 			</View>
 			<View style={styles.field}>
@@ -116,7 +142,7 @@ export function EntryForm() {
 				/>
 			</View>
 			<View style={styles.field}>
-				<ThemedText style={styles.fieldTitle}>Start date</ThemedText>
+				<ThemedText style={styles.fieldTitle}>Start date*</ThemedText>
 				<Pressable
 					onPress={() => {
 						setIsEditStartDate(true);
@@ -131,7 +157,7 @@ export function EntryForm() {
 				</Pressable>
 			</View>
 			<View style={styles.field}>
-				<ThemedText style={styles.fieldTitle}>End date</ThemedText>
+				<ThemedText style={styles.fieldTitle}>End date*</ThemedText>
 				<Pressable
 					onPress={() => {
 						setIsEditStartDate(false);
@@ -152,12 +178,15 @@ export function EntryForm() {
 				<DateTimePicker value={startDate} mode="time" onChange={onChangeTime} />
 			)}
 			<View style={styles.field}>
-				<ThemedText style={styles.fieldTitle}>Location</ThemedText>
+				<ThemedText style={styles.fieldTitle}>Location*</ThemedText>
 				<TextInput
 					onChangeText={setLocation}
 					value={location}
 					placeholder="Enter location"
-					style={styles.input}
+					style={[
+						styles.input,
+						{ borderColor: locationError ? "red" : "black" },
+					]}
 				/>
 			</View>
 			<View style={styles.field}>
@@ -171,19 +200,7 @@ export function EntryForm() {
 			</View>
 
 			<View style={{ marginTop: 16 }}>
-				<Button
-					title="Save"
-					onPress={() => {
-						console.log("=~=~=~=~=~=");
-						console.log("Saving entry...");
-						console.log("Entry type:", dropdownValue);
-						console.log("Name:", name);
-						console.log("Start date:", startDate);
-						console.log("End date:", endDate);
-						console.log("Location:", location);
-						console.log("Notes:", notes);
-					}}
-				/>
+				<Button title="Save" onPress={onSave} />
 			</View>
 		</View>
 	);
