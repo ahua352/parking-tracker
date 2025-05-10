@@ -1,12 +1,7 @@
 import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { FontAwesome } from "@expo/vector-icons";
-
-enum EntryType {
-	PARKING = "Parking",
-	WARDEN = "Warden",
-	FINE = "Fine",
-}
+import { EntryType, iconMap } from "@/constants/EntryConstants";
 
 export function EntryList() {
 	// TODO: Replace later
@@ -45,13 +40,6 @@ export function EntryList() {
 			files: [],
 		},
 	];
-
-	// Map entry types to icons
-	const iconMap: Record<EntryType, "car" | "shield" | "money"> = {
-		[EntryType.PARKING]: "car",
-		[EntryType.WARDEN]: "shield",
-		[EntryType.FINE]: "money",
-	};
 
 	return (
 		<ScrollView>

@@ -10,12 +10,8 @@ import { ThemedText } from "./ThemedText";
 import React, { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
-
-enum EntryType {
-	PARKING = "Parking",
-	WARDEN = "Warden",
-	FINE = "Fine",
-}
+import { FontAwesome } from "@expo/vector-icons";
+import { EntryType, iconMap } from "@/constants/EntryConstants";
 
 export function EntryForm() {
 	const colorScheme = Appearance.getColorScheme();
@@ -42,7 +38,19 @@ export function EntryForm() {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [dropdownValue, setDropdownValue] = useState(null);
 	const [dropdownItems, setDropdownItems] = useState(
-		Object.values(EntryType).map((type) => ({ label: type, value: type }))
+		Object.values(EntryType).map((type) => ({
+			label: type,
+			value: type,
+			icon: () => (
+				<View style={{ width: 22, alignItems: "center" }}>
+					<FontAwesome
+						name={iconMap[type]}
+						size={20}
+						color={colorScheme === "dark" ? "#bfc7d5" : "black"}
+					/>
+				</View>
+			),
+		}))
 	);
 
 	const [isEditStartDate, setIsEditStartDate] = useState(true);
