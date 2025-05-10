@@ -20,6 +20,18 @@ enum EntryType {
 export function EntryForm() {
 	const colorScheme = Appearance.getColorScheme();
 
+	const styles = StyleSheet.create({
+		input: {
+			borderWidth: 1,
+			padding: 10,
+			paddingVertical: 14,
+			borderRadius: 8,
+			backgroundColor: colorScheme === "dark" ? "#292d3e" : "white",
+			borderColor: "black",
+			color: colorScheme === "dark" ? "#bfc7d5" : "black",
+		},
+	});
+
 	const [name, setName] = useState("");
 	const [location, setLocation] = useState("");
 	const [notes, setNotes] = useState("");
@@ -157,7 +169,3 @@ export function EntryForm() {
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	input: { borderWidth: 1, padding: 8, borderRadius: 4 },
-});
