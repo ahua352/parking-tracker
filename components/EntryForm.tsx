@@ -171,11 +171,23 @@ export function EntryForm() {
 					/>
 				</Pressable>
 			</View>
+
+			{/* Note: Didn't limit times */}
 			{showDatePicker && (
-				<DateTimePicker value={startDate} mode="date" onChange={onChangeDate} />
+				<DateTimePicker
+					value={isEditStartDate ? startDate : endDate}
+					mode="date"
+					onChange={onChangeDate}
+					minimumDate={isEditStartDate ? undefined : startDate}
+					maximumDate={isEditStartDate ? endDate : new Date()}
+				/>
 			)}
 			{showTimePicker && (
-				<DateTimePicker value={startDate} mode="time" onChange={onChangeTime} />
+				<DateTimePicker
+					value={isEditStartDate ? startDate : endDate}
+					mode="time"
+					onChange={onChangeTime}
+				/>
 			)}
 			<View style={styles.field}>
 				<ThemedText style={styles.fieldTitle}>Location*</ThemedText>
