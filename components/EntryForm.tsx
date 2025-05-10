@@ -1,4 +1,11 @@
-import { StyleSheet, TextInput, View, Pressable, Button } from "react-native";
+import {
+	StyleSheet,
+	TextInput,
+	View,
+	Pressable,
+	Button,
+	Appearance,
+} from "react-native";
 import { ThemedText } from "./ThemedText";
 import React, { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -11,6 +18,8 @@ enum EntryType {
 }
 
 export function EntryForm() {
+	const colorScheme = Appearance.getColorScheme();
+
 	const [name, setName] = useState("");
 	const [location, setLocation] = useState("");
 	const [notes, setNotes] = useState("");
@@ -70,6 +79,7 @@ export function EntryForm() {
 				setValue={setDropdownValue}
 				setItems={setDropdownItems}
 				placeholder="Select an option"
+				theme={colorScheme === "dark" ? "DARK" : "LIGHT"}
 			/>
 
 			<ThemedText>Name</ThemedText>
