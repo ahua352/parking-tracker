@@ -19,14 +19,20 @@ export function EntryForm() {
 		Object.values(EntryType).map((type) => ({ label: type, value: type }))
 	);
 
-	const [date, setDate] = useState(new Date());
+	const [isEditStartDate, setIsEditStartDate] = useState(true);
+	const [startDate, setStartDate] = useState(new Date());
+	const [endDate, setEndDate] = useState(new Date());
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [showTimePicker, setShowTimePicker] = useState(false);
 
 	const onChangeDate = (event: any, selectedDate?: Date) => {
 		// Update selected date
 		if (event.type === "set" && selectedDate) {
-			setDate(selectedDate);
+			if (isEditStartDate) {
+				setStartDate(selectedDate);
+			} else {
+				setEndDate(selectedDate);
+			}
 			setShowDatePicker(false);
 			setShowTimePicker(true);
 			// Close date picker
@@ -38,10 +44,14 @@ export function EntryForm() {
 	const onChangeTime = (event: any, selectedTime?: Date) => {
 		// Update selected date with time
 		if (event.type === "set" && selectedTime) {
-			const updatedDate = new Date(date);
+			const updatedDate = new Date(isEditStartDate ? startDate : endDate);
 			updatedDate.setHours(selectedTime.getHours());
 			updatedDate.setMinutes(selectedTime.getMinutes());
-			setDate(updatedDate);
+			if (isEditStartDate) {
+				setStartDate(updatedDate);
+			} else {
+				setEndDate(updatedDate);
+			}
 		}
 		// Close time picker
 		setShowTimePicker(false);
@@ -69,19 +79,38 @@ export function EntryForm() {
 			></TextInput>
 
 			<ThemedText>Start date</ThemedText>
-
-			<Pressable onPress={() => setShowDatePicker(true)}>
+			<Pressable
+				onPress={() => {
+					setIsEditStartDate(true);
+					setShowDatePicker(true);
+				}}
+			>
 				<TextInput
-					value={date.toLocaleString()}
+					value={startDate.toLocaleString()}
 					style={styles.input}
 					editable={false}
 				></TextInput>
 			</Pressable>
+
+			<ThemedText>End date</ThemedText>
+			<Pressable
+				onPress={() => {
+					setIsEditStartDate(false);
+					setShowDatePicker(true);
+				}}
+			>
+				<TextInput
+					value={endDate.toLocaleString()}
+					style={styles.input}
+					editable={false}
+				></TextInput>
+			</Pressable>
+
 			{showDatePicker && (
-				<DateTimePicker value={date} mode="date" onChange={onChangeDate} />
+				<DateTimePicker value={startDate} mode="date" onChange={onChangeDate} />
 			)}
 			{showTimePicker && (
-				<DateTimePicker value={date} mode="time" onChange={onChangeTime} />
+				<DateTimePicker value={startDate} mode="time" onChange={onChangeTime} />
 			)}
 		</View>
 	);
