@@ -30,6 +30,9 @@ export function EntryForm() {
 			borderColor: "black",
 			color: colorScheme === "dark" ? "#bfc7d5" : "black",
 		},
+		container: { marginTop: 16, flexDirection: "column", gap: 16 },
+		field: { flexDirection: "column", gap: 6 },
+		fieldTitle: { fontWeight: "bold" },
 	});
 
 	const [name, setName] = useState("");
@@ -81,91 +84,99 @@ export function EntryForm() {
 	};
 
 	return (
-		<View>
-			<ThemedText>Entry type</ThemedText>
-			<DropDownPicker
-				open={dropdownOpen}
-				value={dropdownValue}
-				items={dropdownItems}
-				setOpen={setDropdownOpen}
-				setValue={setDropdownValue}
-				setItems={setDropdownItems}
-				placeholder="Select an option"
-				theme={colorScheme === "dark" ? "DARK" : "LIGHT"}
-			/>
-
-			<ThemedText>Name</ThemedText>
-			<TextInput
-				onChangeText={setName}
-				value={name}
-				placeholder="Optional"
-				style={styles.input}
-			></TextInput>
-
-			<ThemedText>Start date</ThemedText>
-			<Pressable
-				onPress={() => {
-					setIsEditStartDate(true);
-					setShowDatePicker(true);
-				}}
-			>
-				<TextInput
-					value={startDate.toLocaleString()}
-					style={styles.input}
-					editable={false}
+		<View style={styles.container}>
+			<View style={styles.field}>
+				<ThemedText style={styles.fieldTitle}>Entry type</ThemedText>
+				<DropDownPicker
+					open={dropdownOpen}
+					value={dropdownValue}
+					items={dropdownItems}
+					setOpen={setDropdownOpen}
+					setValue={setDropdownValue}
+					setItems={setDropdownItems}
+					placeholder="Select an option"
+					theme={colorScheme === "dark" ? "DARK" : "LIGHT"}
 				/>
-			</Pressable>
-
-			<ThemedText>End date</ThemedText>
-			<Pressable
-				onPress={() => {
-					setIsEditStartDate(false);
-					setShowDatePicker(true);
-				}}
-			>
+			</View>
+			<View style={styles.field}>
+				<ThemedText style={styles.fieldTitle}>Name</ThemedText>
 				<TextInput
-					value={endDate.toLocaleString()}
+					onChangeText={setName}
+					value={name}
+					placeholder="Optional"
 					style={styles.input}
-					editable={false}
 				/>
-			</Pressable>
-
+			</View>
+			<View style={styles.field}>
+				<ThemedText style={styles.fieldTitle}>Start date</ThemedText>
+				<Pressable
+					onPress={() => {
+						setIsEditStartDate(true);
+						setShowDatePicker(true);
+					}}
+				>
+					<TextInput
+						value={startDate.toLocaleString()}
+						style={styles.input}
+						editable={false}
+					/>
+				</Pressable>
+			</View>
+			<View style={styles.field}>
+				<ThemedText style={styles.fieldTitle}>End date</ThemedText>
+				<Pressable
+					onPress={() => {
+						setIsEditStartDate(false);
+						setShowDatePicker(true);
+					}}
+				>
+					<TextInput
+						value={endDate.toLocaleString()}
+						style={styles.input}
+						editable={false}
+					/>
+				</Pressable>
+			</View>
 			{showDatePicker && (
 				<DateTimePicker value={startDate} mode="date" onChange={onChangeDate} />
 			)}
 			{showTimePicker && (
 				<DateTimePicker value={startDate} mode="time" onChange={onChangeTime} />
 			)}
+			<View style={styles.field}>
+				<ThemedText style={styles.fieldTitle}>Location</ThemedText>
+				<TextInput
+					onChangeText={setLocation}
+					value={location}
+					placeholder="Enter location"
+					style={styles.input}
+				/>
+			</View>
+			<View style={styles.field}>
+				<ThemedText style={styles.fieldTitle}>Notes</ThemedText>
+				<TextInput
+					onChangeText={setNotes}
+					value={notes}
+					placeholder="Optional"
+					style={styles.input}
+				/>
+			</View>
 
-			<ThemedText>Location</ThemedText>
-			<TextInput
-				onChangeText={setLocation}
-				value={location}
-				placeholder="Enter location"
-				style={styles.input}
-			/>
-
-			<ThemedText>Notes</ThemedText>
-			<TextInput
-				onChangeText={setNotes}
-				value={notes}
-				placeholder="Optional"
-				style={styles.input}
-			/>
-
-			<Button
-				title="Save"
-				onPress={() => {
-					console.log("=~=~=~=~=~=");
-					console.log("Saving entry...");
-					console.log("Entry type:", dropdownValue);
-					console.log("Name:", name);
-					console.log("Start date:", startDate);
-					console.log("End date:", endDate);
-					console.log("Location:", location);
-					console.log("Notes:", notes);
-				}}
-			/>
+			<View style={{ marginTop: 16 }}>
+				<Button
+					title="Save"
+					onPress={() => {
+						console.log("=~=~=~=~=~=");
+						console.log("Saving entry...");
+						console.log("Entry type:", dropdownValue);
+						console.log("Name:", name);
+						console.log("Start date:", startDate);
+						console.log("End date:", endDate);
+						console.log("Location:", location);
+						console.log("Notes:", notes);
+					}}
+				/>
+			</View>
 		</View>
 	);
 }
