@@ -1,5 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { FontAwesome } from "@expo/vector-icons";
 
@@ -66,7 +65,16 @@ export function EntryList() {
 					const minutes = duration % 60;
 
 					return (
-						<View key={i} style={styles.row}>
+						<Pressable
+							key={i}
+							style={({ pressed }: { pressed: boolean }) => [
+								styles.row,
+								pressed && styles.rowPressed,
+							]}
+							onPress={() => {
+								console.log(`Entry ${e.id} pressed`);
+							}}
+						>
 							<View style={styles.leftSection}>
 								<View style={styles.iconCircle}>
 									<FontAwesome name={iconMap[e.type]} size={24} color="pink" />
@@ -79,13 +87,12 @@ export function EntryList() {
 									<ThemedText>{e.location}</ThemedText>
 								</View>
 							</View>
-
 							<View style={styles.duration}>
 								<ThemedText>
 									{minutes === 0 ? `${hours} h` : `${hours} h ${minutes} m`}
 								</ThemedText>
 							</View>
-						</View>
+						</Pressable>
 					);
 				})}
 			</View>
@@ -110,6 +117,9 @@ const styles = StyleSheet.create({
 		marginBottom: 16,
 		padding: 8,
 		borderRadius: 8,
+	},
+	rowPressed: {
+		backgroundColor: "darkslategrey",
 	},
 	leftSection: {
 		flexDirection: "row",
