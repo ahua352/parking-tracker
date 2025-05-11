@@ -30,8 +30,8 @@ export function EntryList() {
 							onPress={() => {
 								console.log(`Entry ${e.id} pressed`);
 								router.push({
-									pathname: "/addEntry",
-									params: { entry: JSON.stringify(e) },
+									pathname: "/editEntry",
+									params: { id: e.id.toString() },
 								});
 							}}
 						>

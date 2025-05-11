@@ -43,6 +43,8 @@ export default function TabLayout() {
 					tabBarIcon: ({ color }) => (
 						<IconSymbol size={28} name="plus.circle.fill" color={color} />
 					),
+					headerShown: true,
+					headerTitleStyle: { fontSize: 24 },
 				}}
 			/>
 		</Tabs>
