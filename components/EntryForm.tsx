@@ -183,6 +183,9 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 					placeholder="Select an option"
 					theme={colorScheme === "dark" ? "DARK" : "LIGHT"}
 					style={{ borderColor: dropdownError ? "red" : "black" }}
+					placeholderStyle={{
+						color: "#72777f",
+					}}
 				/>
 			</View>
 			<View style={styles.field}>
@@ -192,6 +195,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 					value={name}
 					placeholder="Optional"
 					style={styles.input}
+					placeholderTextColor="#72777f"
 				/>
 			</View>
 			<View style={styles.field}>
@@ -252,6 +256,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 						styles.input,
 						{ borderColor: locationError ? "red" : "black" },
 					]}
+					placeholderTextColor="#72777f"
 				/>
 			</View>
 			<View style={styles.field}>
@@ -261,6 +266,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 					value={notes}
 					placeholder="Optional"
 					style={styles.input}
+					placeholderTextColor="#72777f"
 				/>
 			</View>
 
