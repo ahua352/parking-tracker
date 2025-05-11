@@ -178,7 +178,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 						setItems={setDropdownItems}
 						placeholder="Select an option"
 						theme={colorScheme === "dark" ? "DARK" : "LIGHT"}
-						style={{ borderColor: dropdownError ? "red" : "black" }}
+						style={{ borderColor: dropdownError ? "#f44336" : "black" }}
 						placeholderStyle={{
 							color: "#72777f",
 						}}
@@ -250,7 +250,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 						placeholder="Enter location"
 						style={[
 							styles.input,
-							{ borderColor: locationError ? "red" : "black" },
+							{ borderColor: locationError ? "#f44336" : "black" },
 						]}
 						placeholderTextColor="#72777f"
 					/>
@@ -266,13 +266,37 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 					/>
 				</View>
 
-				<View style={{ marginTop: 16 }}>
-					<Button title="Save" onPress={onSave} />
+				<View style={{ marginTop: 24 }}>
+					<Pressable
+						onPress={onSave}
+						style={{
+							backgroundColor: "#2196f3",
+							borderRadius: 12,
+							paddingVertical: 12,
+							alignItems: "center",
+						}}
+					>
+						<ThemedText style={{ color: "white", fontWeight: "bold" }}>
+							Save
+						</ThemedText>
+					</Pressable>
 				</View>
 
 				{entry && (
-					<View style={{ marginTop: 16 }}>
-						<Button title="Delete" onPress={onDelete} color="darkred" />
+					<View style={{ marginTop: 8 }}>
+						<Pressable
+							onPress={onDelete}
+							style={{
+								backgroundColor: "#f44336",
+								borderRadius: 12,
+								paddingVertical: 12,
+								alignItems: "center",
+							}}
+						>
+							<ThemedText style={{ color: "white", fontWeight: "bold" }}>
+								Delete
+							</ThemedText>
+						</Pressable>
 					</View>
 				)}
 			</View>
