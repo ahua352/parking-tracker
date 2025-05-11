@@ -7,12 +7,13 @@ import {
 	Appearance,
 } from "react-native";
 import { ThemedText } from "./ThemedText";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { FontAwesome } from "@expo/vector-icons";
 import { Entry, EntryType, iconMap } from "@/constants/EntryConstants";
 import { useEntryContext } from "@/contexts/EntryContext";
+import { useFocusEffect } from "expo-router";
 
 export function EntryForm({ entry }: { entry?: Entry }) {
 	const { addEntry, updateEntry, entries } = useEntryContext();
@@ -157,24 +158,17 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 		console.log("Entries updated:", entries);
 	}, [entries]);
 
-	// Set initial values for entry
-	useEffect(() => {
-		if (entry) {
-			setName(entry.name);
-			setNotes(entry.notes);
-			setLocation(entry.location);
-			setStartDate(new Date(entry.dateStart));
-			setEndDate(new Date(entry.dateEnd));
-			setDropdownValue(entry.type);
-		} else {
-			setName("");
-			setNotes("");
-			setLocation("");
-			setStartDate(new Date());
-			setEndDate(new Date());
-			setDropdownValue(null);
-		}
-	}, [entry]);
+	// Reset fields when component is focused
+	useFocusEffect(
+		useCallback(() => {
+			setName(entry ? entry.name : "");
+			setNotes(entry ? entry.notes : "");
+			setLocation(entry ? entry.location : "");
+			setStartDate(entry ? new Date(entry.dateStart) : new Date());
+			setEndDate(entry ? new Date(entry.dateEnd) : new Date());
+			setDropdownValue(entry ? entry.type : null);
+		}, [entry])
+	);
 
 	return (
 		<View style={styles.container}>
