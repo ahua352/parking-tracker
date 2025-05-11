@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 interface EntryContextType {
 	entries: Entry[];
 	addEntry: (entry: Entry) => void;
+	updateEntry: (entry: Entry) => void;
 }
 
 const EntryContext = createContext<EntryContextType | undefined>(undefined);
@@ -49,8 +50,16 @@ export const EntryContextProvider = ({ children }: { children: ReactNode }) => {
 		setEntries((prevEntries) => [...prevEntries, entry]);
 	};
 
+	const updateEntry = (updatedEntry: Entry) => {
+		setEntries((prevEntries) =>
+			prevEntries.map((entry) =>
+				entry.id === updatedEntry.id ? updatedEntry : entry
+			)
+		);
+	};
+
 	return (
-		<EntryContext.Provider value={{ entries, addEntry }}>
+		<EntryContext.Provider value={{ entries, addEntry, updateEntry }}>
 			{children}
 		</EntryContext.Provider>
 	);

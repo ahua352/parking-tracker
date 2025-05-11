@@ -15,7 +15,7 @@ import { Entry, EntryType, iconMap } from "@/constants/EntryConstants";
 import { useEntryContext } from "@/contexts/EntryContext";
 
 export function EntryForm({ entry }: { entry?: Entry }) {
-	const { addEntry, entries } = useEntryContext();
+	const { addEntry, updateEntry, entries } = useEntryContext();
 
 	const colorScheme = Appearance.getColorScheme();
 	const styles = StyleSheet.create({
@@ -118,19 +118,37 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 		} else {
 			console.log("No errors");
 			// TODO: Fix ID, geocode, and files
-			const entry = {
-				id: Math.floor(Math.random() * 1000000),
-				dateStart: startDate,
-				dateEnd: endDate,
-				location: location,
-				geocode: [0, 0] as [number, number],
-				type: dropdownValue,
-				name: name,
-				notes: notes,
-				files: [],
-			};
 
-			addEntry(entry);
+			if (!entry) {
+				const entryNew = {
+					id: Math.floor(Math.random() * 1000000),
+					dateStart: startDate,
+					dateEnd: endDate,
+					location: location,
+					geocode: [0, 0] as [number, number],
+					type: dropdownValue,
+					name: name,
+					notes: notes,
+					files: [],
+				};
+
+				addEntry(entryNew);
+				// Update entry
+			} else {
+				const entryNew = {
+					id: entry.id,
+					dateStart: startDate,
+					dateEnd: endDate,
+					location: location,
+					geocode: entry.geocode,
+					type: dropdownValue,
+					name: name,
+					notes: notes,
+					files: entry.files,
+				};
+
+				updateEntry(entryNew);
+			}
 		}
 	};
 
