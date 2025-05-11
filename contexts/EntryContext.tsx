@@ -61,18 +61,18 @@ export const EntryContextProvider = ({ children }: { children: ReactNode }) => {
 		// },
 	]);
 
-	useEffect(() => {
-		const fetchEntries = async () => {
-			try {
-				const result = await database.getAllAsync("SELECT * FROM entries");
-				const fetchedEntries = mapEntries(result);
-				setEntries(fetchedEntries);
-				console.log("Fetched entries:", fetchedEntries);
-			} catch (error) {
-				console.error("Error fetching entries:", error);
-			}
-		};
+	const fetchEntries = async () => {
+		try {
+			const result = await database.getAllAsync("SELECT * FROM entries");
+			const fetchedEntries = mapEntries(result);
+			setEntries(fetchedEntries);
+			console.log("Fetched entries:", fetchedEntries);
+		} catch (error) {
+			console.error("Error fetching entries:", error);
+		}
+	};
 
+	useEffect(() => {
 		fetchEntries();
 	}, []);
 
@@ -92,22 +92,33 @@ export const EntryContextProvider = ({ children }: { children: ReactNode }) => {
 			);
 			console.log("Entry added to database:", entry);
 
-			// Fetch entries from database
-			const result = await database.getAllAsync("SELECT * FROM entries");
-			const fetchedEntries = mapEntries(result);
-			setEntries(fetchedEntries);
-			console.log("Updated entries:", fetchedEntries);
+			fetchEntries();
 		} catch (error) {
 			console.error("Error adding entry:", error);
 		}
 	};
 
-	const updateEntry = (updatedEntry: Entry) => {
-		setEntries((prevEntries) =>
-			prevEntries.map((entry) =>
-				entry.id === updatedEntry.id ? updatedEntry : entry
-			)
-		);
+	const updateEntry = async (updatedEntry: Entry) => {
+		// Update entry in database
+		try {
+			await database.runAsync(
+				"UPDATE entries SET dateStart = ?, dateEnd = ?, location = ?, type = ?, name = ?, notes = ? WHERE id = ?",
+				[
+					updatedEntry.dateStart.getTime(),
+					updatedEntry.dateEnd.getTime(),
+					updatedEntry.location,
+					updatedEntry.type,
+					updatedEntry.name,
+					updatedEntry.notes,
+					updatedEntry.id,
+				]
+			);
+			console.log("Entry updated in database:", updatedEntry);
+
+			fetchEntries();
+		} catch (error) {
+			console.error("Error updating entry:", error);
+		}
 	};
 
 	const deleteEntry = (id: number) => {

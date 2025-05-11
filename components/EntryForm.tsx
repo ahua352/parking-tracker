@@ -157,11 +157,6 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 		}
 	};
 
-	// TODO: Remove this
-	useEffect(() => {
-		console.log("Entries updated:", entries);
-	}, [entries]);
-
 	// Reset fields when component is focused
 	useFocusEffect(
 		useCallback(() => {
