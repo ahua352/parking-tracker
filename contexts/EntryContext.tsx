@@ -5,6 +5,7 @@ interface EntryContextType {
 	entries: Entry[];
 	addEntry: (entry: Entry) => void;
 	updateEntry: (entry: Entry) => void;
+	deleteEntry: (id: number) => void;
 }
 
 const EntryContext = createContext<EntryContextType | undefined>(undefined);
@@ -58,8 +59,14 @@ export const EntryContextProvider = ({ children }: { children: ReactNode }) => {
 		);
 	};
 
+	const deleteEntry = (id: number) => {
+		setEntries((prevEntries) => prevEntries.filter((entry) => entry.id !== id));
+	};
+
 	return (
-		<EntryContext.Provider value={{ entries, addEntry, updateEntry }}>
+		<EntryContext.Provider
+			value={{ entries, addEntry, updateEntry, deleteEntry }}
+		>
 			{children}
 		</EntryContext.Provider>
 	);

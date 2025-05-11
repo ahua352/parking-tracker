@@ -17,7 +17,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 
 export function EntryForm({ entry }: { entry?: Entry }) {
 	const router = useRouter();
-	const { addEntry, updateEntry, entries } = useEntryContext();
+	const { entries, addEntry, updateEntry, deleteEntry } = useEntryContext();
 
 	const colorScheme = Appearance.getColorScheme();
 	const styles = StyleSheet.create({
@@ -155,6 +155,14 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 		}
 	};
 
+	const onDelete = () => {
+		if (entry) {
+			console.log("Deleting entry with ID: " + entry.id + "...");
+			deleteEntry(entry.id);
+			router.back();
+		}
+	};
+
 	// TODO: Remove this
 	useEffect(() => {
 		console.log("Entries updated:", entries);
@@ -270,6 +278,12 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 			<View style={{ marginTop: 16 }}>
 				<Button title="Save" onPress={onSave} />
 			</View>
+
+			{entry && (
+				<View style={{ marginTop: 16 }}>
+					<Button title="Delete" onPress={onDelete} color="darkred" />
+				</View>
+			)}
 		</View>
 	);
 }
