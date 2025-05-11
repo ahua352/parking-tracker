@@ -121,8 +121,15 @@ export const EntryContextProvider = ({ children }: { children: ReactNode }) => {
 		}
 	};
 
-	const deleteEntry = (id: number) => {
-		setEntries((prevEntries) => prevEntries.filter((entry) => entry.id !== id));
+	const deleteEntry = async (id: number) => {
+		try {
+			await database.runAsync("DELETE FROM entries WHERE id = ?", [id]);
+			console.log("Entry deleted from database with ID:", id);
+
+			fetchEntries();
+		} catch (error) {
+			console.error("Error deleting entry:", error);
+		}
 	};
 
 	return (
