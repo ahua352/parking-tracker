@@ -119,11 +119,10 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 			return;
 		} else {
 			console.log("No errors");
-			// TODO: Fix ID, geocode, and files
-
+			// TODO: Fix geocode, and files
 			if (!entry) {
 				const entryNew = {
-					id: Math.floor(Math.random() * 1000000),
+					id: entries[entries.length - 1].id + 1,
 					dateStart: startDate,
 					dateEnd: endDate,
 					location: location,
