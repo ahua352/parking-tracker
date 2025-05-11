@@ -11,10 +11,10 @@ import React, { useEffect, useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { FontAwesome } from "@expo/vector-icons";
-import { EntryType, iconMap } from "@/constants/EntryConstants";
+import { Entry, EntryType, iconMap } from "@/constants/EntryConstants";
 import { useEntryContext } from "@/contexts/EntryContext";
 
-export function EntryForm() {
+export function EntryForm({ entry }: { entry?: Entry }) {
 	const { addEntry, entries } = useEntryContext();
 
 	const colorScheme = Appearance.getColorScheme();
@@ -33,14 +33,14 @@ export function EntryForm() {
 		fieldTitle: { fontWeight: "bold" },
 	});
 
-	const [name, setName] = useState("");
-	const [notes, setNotes] = useState("");
-	const [location, setLocation] = useState("");
+	const [name, setName] = useState(entry ? entry.name : "");
+	const [notes, setNotes] = useState(entry ? entry.notes : "");
+	const [location, setLocation] = useState(entry ? entry.location : "");
 	const [locationError, setLocationError] = useState(false);
 
 	const [dropdownError, setDropdownError] = useState(false);
 	const [dropdownOpen, setDropdownOpen] = useState(false);
-	const [dropdownValue, setDropdownValue] = useState(null);
+	const [dropdownValue, setDropdownValue] = useState(entry ? entry.type : null);
 	const [dropdownItems, setDropdownItems] = useState(
 		Object.values(EntryType).map((type) => ({
 			label: type,
@@ -58,8 +58,10 @@ export function EntryForm() {
 	);
 
 	const [isEditStartDate, setIsEditStartDate] = useState(true);
-	const [startDate, setStartDate] = useState(new Date());
-	const [endDate, setEndDate] = useState(new Date());
+	const [startDate, setStartDate] = useState(
+		entry ? entry.dateStart : new Date()
+	);
+	const [endDate, setEndDate] = useState(entry ? entry.dateEnd : new Date());
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [showTimePicker, setShowTimePicker] = useState(false);
 
@@ -136,6 +138,25 @@ export function EntryForm() {
 	useEffect(() => {
 		console.log("Entries updated:", entries);
 	}, [entries]);
+
+	// Set initial values for entry
+	useEffect(() => {
+		if (entry) {
+			setName(entry.name);
+			setNotes(entry.notes);
+			setLocation(entry.location);
+			setStartDate(new Date(entry.dateStart));
+			setEndDate(new Date(entry.dateEnd));
+			setDropdownValue(entry.type);
+		} else {
+			setName("");
+			setNotes("");
+			setLocation("");
+			setStartDate(new Date());
+			setEndDate(new Date());
+			setDropdownValue(null);
+		}
+	}, [entry]);
 
 	return (
 		<View style={styles.container}>

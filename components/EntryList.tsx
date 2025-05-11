@@ -1,11 +1,14 @@
-import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
+import { View, StyleSheet, Pressable, ScrollView } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { FontAwesome } from "@expo/vector-icons";
-import { EntryType, iconMap } from "@/constants/EntryConstants";
+import { iconMap } from "@/constants/EntryConstants";
 import { useEntryContext } from "@/contexts/EntryContext";
+import { useRouter } from "expo-router";
 
 export function EntryList() {
 	const { entries } = useEntryContext();
+	const router = useRouter();
+
 	return (
 		<ScrollView>
 			<View>
@@ -26,6 +29,10 @@ export function EntryList() {
 							]}
 							onPress={() => {
 								console.log(`Entry ${e.id} pressed`);
+								router.push({
+									pathname: "/addEntry",
+									params: { entry: JSON.stringify(e) },
+								});
 							}}
 						>
 							<View style={styles.leftSection}>
