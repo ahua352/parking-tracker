@@ -38,28 +38,24 @@ export function EntryList() {
 									});
 								}}
 							>
-								<View style={styles.leftSection}>
-									<View style={styles.iconCircle}>
-										<FontAwesome
-											name={iconMap[e.type]}
-											size={24}
-											color="pink"
-										/>
+								<View style={styles.iconCircle}>
+									<FontAwesome name={iconMap[e.type]} size={24} color="pink" />
+								</View>
+								<View style={styles.rightSection}>
+									<View style={styles.topTextContainer}>
+										<ThemedText type="subtitle" style={styles.textType}>
+											{e.type}
+										</ThemedText>
+										<ThemedText style={styles.duration}>
+											{minutes === 0 ? `${hours} h` : `${hours} h ${minutes} m`}
+										</ThemedText>
 									</View>
-									<View style={styles.textContainer}>
-										<ThemedText type="subtitle">{e.type}</ThemedText>
+									<View>
 										<ThemedText style={styles.dateStart}>
 											{e.dateStart.toLocaleString()}
 										</ThemedText>
-										<View style={styles.locationContainer}>
-											<ThemedText>{e.location}</ThemedText>
-										</View>
+										<ThemedText>{e.location}</ThemedText>
 									</View>
-								</View>
-								<View style={styles.duration}>
-									<ThemedText>
-										{minutes === 0 ? `${hours} h` : `${hours} h ${minutes} m`}
-									</ThemedText>
 								</View>
 							</Pressable>
 						);
@@ -91,13 +87,7 @@ const styles = StyleSheet.create({
 	rowPressed: {
 		backgroundColor: "darkslategrey",
 	},
-	leftSection: {
-		flexDirection: "row",
-		flex: 1,
-	},
-	textContainer: {
-		marginLeft: 8,
-		flexWrap: "wrap",
+	textType: {
 		flex: 1,
 	},
 	duration: {
@@ -110,4 +100,6 @@ const styles = StyleSheet.create({
 	locationContainer: {
 		flex: 1,
 	},
+	rightSection: { flexDirection: "column", flex: 1, marginLeft: 8 },
+	topTextContainer: { flexDirection: "row", flex: 1 },
 });
