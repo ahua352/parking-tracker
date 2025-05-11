@@ -121,7 +121,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 			console.log("No errors");
 			if (!entry) {
 				const entryNew = {
-					id: entries[entries.length - 1].id + 1,
+					id: -1,
 					dateStart: startDate,
 					dateEnd: endDate,
 					location: location,
