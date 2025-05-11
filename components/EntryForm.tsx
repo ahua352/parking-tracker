@@ -119,18 +119,15 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 			return;
 		} else {
 			console.log("No errors");
-			// TODO: Fix geocode, and files
 			if (!entry) {
 				const entryNew = {
 					id: entries[entries.length - 1].id + 1,
 					dateStart: startDate,
 					dateEnd: endDate,
 					location: location,
-					geocode: [0, 0] as [number, number],
 					type: dropdownValue,
 					name: name,
 					notes: notes,
-					files: [],
 				};
 
 				addEntry(entryNew);
@@ -141,11 +138,9 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 					dateStart: startDate,
 					dateEnd: endDate,
 					location: location,
-					geocode: entry.geocode,
 					type: dropdownValue,
 					name: name,
 					notes: notes,
-					files: entry.files,
 				};
 
 				updateEntry(entryNew);

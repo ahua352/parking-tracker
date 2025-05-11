@@ -16,9 +16,7 @@ export interface Entry {
 	dateStart: Date;
 	dateEnd: Date;
 	location: string;
-	geocode: [number, number];
 	type: EntryType;
 	name: string;
 	notes: string;
-	files: string[];
 }

@@ -12,6 +12,7 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { EntryContextProvider } from "@/contexts/EntryContext";
+import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -32,22 +33,41 @@ export default function RootLayout() {
 		return null;
 	}
 
+	const createDbIfNeeded = async (db: SQLiteDatabase) => {
+		console.log("Creating database if needed");
+		await db.execAsync(
+			`CREATE TABLE IF NOT EXISTS entries (
+				id INTEGER PRIMARY KEY AUTOINCREMENT,
+				name TEXT,
+				type TEXT,
+				notes TEXT,
+				location TEXT,
+				dateStart INTEGER,
+				dateEnd INTEGER
+			);`
+		);
+	};
+
 	return (
-		<EntryContextProvider>
-			<ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-				<Stack>
-					<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-					<Stack.Screen name="+not-found" />
-					<Stack.Screen
-						name="editEntry"
-						options={{
-							title: "Edit Entry",
-							headerTitleStyle: { fontSize: 24 },
-						}}
-					/>
-				</Stack>
-				<StatusBar style="auto" />
-			</ThemeProvider>
-		</EntryContextProvider>
+		<SQLiteProvider databaseName="test.db" onInit={createDbIfNeeded}>
+			<EntryContextProvider>
+				<ThemeProvider
+					value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+				>
+					<Stack>
+						<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+						<Stack.Screen name="+not-found" />
+						<Stack.Screen
+							name="editEntry"
+							options={{
+								title: "Edit Entry",
+								headerTitleStyle: { fontSize: 24 },
+							}}
+						/>
+					</Stack>
+					<StatusBar style="auto" />
+				</ThemeProvider>
+			</EntryContextProvider>
+		</SQLiteProvider>
 	);
 }
