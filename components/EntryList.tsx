@@ -1,4 +1,10 @@
-import { View, StyleSheet, Pressable, ScrollView } from "react-native";
+import {
+	View,
+	StyleSheet,
+	Pressable,
+	ScrollView,
+	useColorScheme,
+} from "react-native";
 import { ThemedText } from "./ThemedText";
 import { FontAwesome } from "@expo/vector-icons";
 import { iconMap } from "@/constants/EntryConstants";
@@ -8,6 +14,46 @@ import { useRouter } from "expo-router";
 export function EntryList() {
 	const { entries } = useEntryContext();
 	const router = useRouter();
+	const colorScheme = useColorScheme();
+
+	const styles = StyleSheet.create({
+		iconCircle: {
+			width: 50,
+			height: 50,
+			borderRadius: 25,
+			backgroundColor: colorScheme === "dark" ? "#151718" : "white",
+			justifyContent: "center",
+			alignItems: "center",
+			margin: 8,
+		},
+		row: {
+			flexDirection: "row",
+			backgroundColor: colorScheme === "dark" ? "#292d3e" : "lightgrey",
+			justifyContent: "space-between",
+			marginBottom: 16,
+			padding: 8,
+			borderRadius: 8,
+		},
+		rowPressed: {
+			backgroundColor: colorScheme === "dark" ? "#535664" : "#a8a8a8",
+		},
+		textType: {
+			flex: 1,
+		},
+		duration: {
+			marginRight: 8,
+			flexShrink: 0,
+		},
+		dateStart: {
+			marginTop: 6,
+			fontStyle: "italic",
+		},
+		locationContainer: {
+			flex: 1,
+		},
+		rightSection: { flexDirection: "column", flex: 1, marginLeft: 8 },
+		topTextContainer: { flexDirection: "row", flex: 1 },
+	});
 
 	return (
 		<ScrollView>
@@ -39,7 +85,11 @@ export function EntryList() {
 								}}
 							>
 								<View style={styles.iconCircle}>
-									<FontAwesome name={iconMap[e.type]} size={24} color="pink" />
+									<FontAwesome
+										name={iconMap[e.type]}
+										size={24}
+										color={colorScheme === "dark" ? "white" : "black"}
+									/>
 								</View>
 								<View style={styles.rightSection}>
 									<View style={styles.topTextContainer}>
@@ -65,41 +115,3 @@ export function EntryList() {
 		</ScrollView>
 	);
 }
-
-const styles = StyleSheet.create({
-	iconCircle: {
-		width: 50,
-		height: 50,
-		borderRadius: 25,
-		backgroundColor: "#f0f0f0",
-		justifyContent: "center",
-		alignItems: "center",
-		margin: 8,
-	},
-	row: {
-		flexDirection: "row",
-		backgroundColor: "slategrey",
-		justifyContent: "space-between",
-		marginBottom: 16,
-		padding: 8,
-		borderRadius: 8,
-	},
-	rowPressed: {
-		backgroundColor: "darkslategrey",
-	},
-	textType: {
-		flex: 1,
-	},
-	duration: {
-		marginRight: 8,
-		flexShrink: 0,
-	},
-	dateStart: {
-		marginTop: 4,
-	},
-	locationContainer: {
-		flex: 1,
-	},
-	rightSection: { flexDirection: "column", flex: 1, marginLeft: 8 },
-	topTextContainer: { flexDirection: "row", flex: 1 },
-});
