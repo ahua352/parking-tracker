@@ -13,9 +13,10 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { FontAwesome } from "@expo/vector-icons";
 import { Entry, EntryType, iconMap } from "@/constants/EntryConstants";
 import { useEntryContext } from "@/contexts/EntryContext";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 
 export function EntryForm({ entry }: { entry?: Entry }) {
+	const router = useRouter();
 	const { addEntry, updateEntry, entries } = useEntryContext();
 
 	const colorScheme = Appearance.getColorScheme();
@@ -150,6 +151,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 
 				updateEntry(entryNew);
 			}
+			router.back();
 		}
 	};
 
