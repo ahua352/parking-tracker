@@ -5,9 +5,11 @@ import {
 	Pressable,
 	Button,
 	Appearance,
+	Platform,
+	KeyboardAvoidingView,
 } from "react-native";
 import { ThemedText } from "./ThemedText";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { FontAwesome } from "@expo/vector-icons";
@@ -17,7 +19,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 
 export function EntryForm({ entry }: { entry?: Entry }) {
 	const router = useRouter();
-	const { entries, addEntry, updateEntry, deleteEntry } = useEntryContext();
+	const { addEntry, updateEntry, deleteEntry } = useEntryContext();
 
 	const colorScheme = Appearance.getColorScheme();
 	const styles = StyleSheet.create({
@@ -100,15 +102,6 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 	};
 
 	const onSave = () => {
-		console.log("=~=~=~=~=~=");
-		console.log("Saving entry...");
-		console.log("Entry type:", dropdownValue);
-		console.log("Name:", name);
-		console.log("Start date:", startDate);
-		console.log("End date:", endDate);
-		console.log("Location:", location);
-		console.log("Notes:", notes);
-
 		// Check for errors
 		// Note: Didn't check for date errors, as dates are automatically populated
 		setDropdownError(!dropdownValue ? true : false);
@@ -151,7 +144,6 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 
 	const onDelete = () => {
 		if (entry) {
-			console.log("Deleting entry with ID: " + entry.id + "...");
 			deleteEntry(entry.id);
 			router.back();
 		}
@@ -170,115 +162,120 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 	);
 
 	return (
-		<View style={styles.container}>
-			<View style={styles.field}>
-				<ThemedText style={styles.fieldTitle}>Entry type*</ThemedText>
-				<DropDownPicker
-					open={dropdownOpen}
-					value={dropdownValue}
-					items={dropdownItems}
-					setOpen={setDropdownOpen}
-					setValue={setDropdownValue}
-					setItems={setDropdownItems}
-					placeholder="Select an option"
-					theme={colorScheme === "dark" ? "DARK" : "LIGHT"}
-					style={{ borderColor: dropdownError ? "red" : "black" }}
-					placeholderStyle={{
-						color: "#72777f",
-					}}
-				/>
-			</View>
-			<View style={styles.field}>
-				<ThemedText style={styles.fieldTitle}>Name</ThemedText>
-				<TextInput
-					onChangeText={setName}
-					value={name}
-					placeholder="Optional"
-					style={styles.input}
-					placeholderTextColor="#72777f"
-				/>
-			</View>
-			<View style={styles.field}>
-				<ThemedText style={styles.fieldTitle}>Start date*</ThemedText>
-				<Pressable
-					onPress={() => {
-						setIsEditStartDate(true);
-						setShowDatePicker(true);
-					}}
-				>
-					<TextInput
-						value={startDate.toLocaleString()}
-						style={styles.input}
-						editable={false}
+		<KeyboardAvoidingView
+			style={{ flex: 1 }}
+			behavior={Platform.OS === "ios" ? "padding" : "height"}
+		>
+			<View style={styles.container}>
+				<View style={styles.field}>
+					<ThemedText style={styles.fieldTitle}>Entry type*</ThemedText>
+					<DropDownPicker
+						open={dropdownOpen}
+						value={dropdownValue}
+						items={dropdownItems}
+						setOpen={setDropdownOpen}
+						setValue={setDropdownValue}
+						setItems={setDropdownItems}
+						placeholder="Select an option"
+						theme={colorScheme === "dark" ? "DARK" : "LIGHT"}
+						style={{ borderColor: dropdownError ? "red" : "black" }}
+						placeholderStyle={{
+							color: "#72777f",
+						}}
 					/>
-				</Pressable>
-			</View>
-			<View style={styles.field}>
-				<ThemedText style={styles.fieldTitle}>End date*</ThemedText>
-				<Pressable
-					onPress={() => {
-						setIsEditStartDate(false);
-						setShowDatePicker(true);
-					}}
-				>
-					<TextInput
-						value={endDate.toLocaleString()}
-						style={styles.input}
-						editable={false}
-					/>
-				</Pressable>
-			</View>
-
-			{/* Note: Didn't limit times */}
-			{showDatePicker && (
-				<DateTimePicker
-					value={isEditStartDate ? startDate : endDate}
-					mode="date"
-					onChange={onChangeDate}
-					minimumDate={isEditStartDate ? undefined : startDate}
-					maximumDate={isEditStartDate ? endDate : new Date()}
-				/>
-			)}
-			{showTimePicker && (
-				<DateTimePicker
-					value={isEditStartDate ? startDate : endDate}
-					mode="time"
-					onChange={onChangeTime}
-				/>
-			)}
-			<View style={styles.field}>
-				<ThemedText style={styles.fieldTitle}>Location*</ThemedText>
-				<TextInput
-					onChangeText={setLocation}
-					value={location}
-					placeholder="Enter location"
-					style={[
-						styles.input,
-						{ borderColor: locationError ? "red" : "black" },
-					]}
-					placeholderTextColor="#72777f"
-				/>
-			</View>
-			<View style={styles.field}>
-				<ThemedText style={styles.fieldTitle}>Notes</ThemedText>
-				<TextInput
-					onChangeText={setNotes}
-					value={notes}
-					placeholder="Optional"
-					style={styles.input}
-					placeholderTextColor="#72777f"
-				/>
-			</View>
-
-			<View style={{ marginTop: 16 }}>
-				<Button title="Save" onPress={onSave} />
-			</View>
-
-			{entry && (
-				<View style={{ marginTop: 16 }}>
-					<Button title="Delete" onPress={onDelete} color="darkred" />
 				</View>
-			)}
-		</View>
+				<View style={styles.field}>
+					<ThemedText style={styles.fieldTitle}>Name</ThemedText>
+					<TextInput
+						onChangeText={setName}
+						value={name}
+						placeholder="Optional"
+						style={styles.input}
+						placeholderTextColor="#72777f"
+					/>
+				</View>
+				<View style={styles.field}>
+					<ThemedText style={styles.fieldTitle}>Start date*</ThemedText>
+					<Pressable
+						onPress={() => {
+							setIsEditStartDate(true);
+							setShowDatePicker(true);
+						}}
+					>
+						<TextInput
+							value={startDate.toLocaleString()}
+							style={styles.input}
+							editable={false}
+						/>
+					</Pressable>
+				</View>
+				<View style={styles.field}>
+					<ThemedText style={styles.fieldTitle}>End date*</ThemedText>
+					<Pressable
+						onPress={() => {
+							setIsEditStartDate(false);
+							setShowDatePicker(true);
+						}}
+					>
+						<TextInput
+							value={endDate.toLocaleString()}
+							style={styles.input}
+							editable={false}
+						/>
+					</Pressable>
+				</View>
+
+				{/* Note: Didn't limit times */}
+				{showDatePicker && (
+					<DateTimePicker
+						value={isEditStartDate ? startDate : endDate}
+						mode="date"
+						onChange={onChangeDate}
+						minimumDate={isEditStartDate ? undefined : startDate}
+						maximumDate={isEditStartDate ? endDate : new Date()}
+					/>
+				)}
+				{showTimePicker && (
+					<DateTimePicker
+						value={isEditStartDate ? startDate : endDate}
+						mode="time"
+						onChange={onChangeTime}
+					/>
+				)}
+				<View style={styles.field}>
+					<ThemedText style={styles.fieldTitle}>Location*</ThemedText>
+					<TextInput
+						onChangeText={setLocation}
+						value={location}
+						placeholder="Enter location"
+						style={[
+							styles.input,
+							{ borderColor: locationError ? "red" : "black" },
+						]}
+						placeholderTextColor="#72777f"
+					/>
+				</View>
+				<View style={styles.field}>
+					<ThemedText style={styles.fieldTitle}>Notes</ThemedText>
+					<TextInput
+						onChangeText={setNotes}
+						value={notes}
+						placeholder="Optional"
+						style={styles.input}
+						placeholderTextColor="#72777f"
+					/>
+				</View>
+
+				<View style={{ marginTop: 16 }}>
+					<Button title="Save" onPress={onSave} />
+				</View>
+
+				{entry && (
+					<View style={{ marginTop: 16 }}>
+						<Button title="Delete" onPress={onDelete} color="darkred" />
+					</View>
+				)}
+			</View>
+		</KeyboardAvoidingView>
 	);
 }
