@@ -54,7 +54,21 @@ export function EntryList() {
 		},
 		rightSection: { flexDirection: "column", flex: 1, marginLeft: 8 },
 		topTextContainer: { flexDirection: "row", flex: 1 },
-		filterButton: { backgroundColor: "plum", padding: 12, borderRadius: 8 },
+		filterContainer: {
+			flexDirection: "row",
+			gap: 8,
+			marginBottom: 16,
+		},
+		filterHeading: { marginBottom: 4 },
+		filterPressable: {
+			flex: 1,
+		},
+		filterButton: {
+			backgroundColor: "plum",
+			padding: 12,
+			borderRadius: 8,
+			alignItems: "center",
+		},
 		filterText: {
 			fontWeight: "bold",
 		},
@@ -69,21 +83,51 @@ export function EntryList() {
 					<ThemedText style={{ marginTop: 16 }}>No entries found.</ThemedText>
 				) : (
 					<>
-						<Pressable
-							onPress={() => {
-								if (selectedFilter !== EntryType.PARKING) {
-									setSelectedFilter(EntryType.PARKING);
-								} else {
-									setSelectedFilter(null);
-								}
-							}}
-						>
-							<View style={styles.filterButton}>
-								<ThemedText style={styles.filterText}>
-									Filter By Parking
-								</ThemedText>
-							</View>
-						</Pressable>
+						<ThemedText style={styles.filterHeading}>Filter by:</ThemedText>
+						<View style={styles.filterContainer}>
+							<Pressable
+								style={styles.filterPressable}
+								onPress={() => {
+									if (selectedFilter !== EntryType.PARKING) {
+										setSelectedFilter(EntryType.PARKING);
+									} else {
+										setSelectedFilter(null);
+									}
+								}}
+							>
+								<View style={styles.filterButton}>
+									<ThemedText style={styles.filterText}>Parking</ThemedText>
+								</View>
+							</Pressable>
+							<Pressable
+								style={styles.filterPressable}
+								onPress={() => {
+									if (selectedFilter !== EntryType.WARDEN) {
+										setSelectedFilter(EntryType.WARDEN);
+									} else {
+										setSelectedFilter(null);
+									}
+								}}
+							>
+								<View style={styles.filterButton}>
+									<ThemedText style={styles.filterText}>Warden</ThemedText>
+								</View>
+							</Pressable>
+							<Pressable
+								style={styles.filterPressable}
+								onPress={() => {
+									if (selectedFilter !== EntryType.FINE) {
+										setSelectedFilter(EntryType.FINE);
+									} else {
+										setSelectedFilter(null);
+									}
+								}}
+							>
+								<View style={styles.filterButton}>
+									<ThemedText style={styles.filterText}>Fine</ThemedText>
+								</View>
+							</Pressable>
+						</View>
 						{entries
 							.filter((e) => {
 								if (selectedFilter === null) {
