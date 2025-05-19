@@ -56,7 +56,7 @@ export function EntryList() {
 		topTextContainer: { flexDirection: "row", flex: 1 },
 		filterContainer: {
 			flexDirection: "row",
-			gap: 8,
+			gap: 10,
 			marginBottom: 16,
 		},
 		filterHeading: { marginBottom: 4 },
@@ -64,9 +64,8 @@ export function EntryList() {
 			flex: 1,
 		},
 		filterButton: {
-			backgroundColor: "plum",
 			padding: 12,
-			borderRadius: 8,
+			borderRadius: 24,
 			alignItems: "center",
 		},
 		filterText: {
@@ -82,7 +81,19 @@ export function EntryList() {
 				style={styles.filterPressable}
 				onPress={() => setSelectedFilter(selectedFilter === type ? null : type)}
 			>
-				<View style={styles.filterButton}>
+				<View
+					style={[
+						styles.filterButton,
+						{
+							backgroundColor:
+								selectedFilter === type
+									? "#2196f3"
+									: colorScheme === "dark"
+									? "#135a91"
+									: "#79c0f7",
+						},
+					]}
+				>
 					<ThemedText style={styles.filterText}>{type}</ThemedText>
 				</View>
 			</Pressable>
