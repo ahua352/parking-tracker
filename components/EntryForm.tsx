@@ -7,6 +7,7 @@ import {
 	Appearance,
 	Platform,
 	KeyboardAvoidingView,
+	Alert,
 } from "react-native";
 import { ThemedText } from "./ThemedText";
 import React, { useCallback, useState } from "react";
@@ -144,8 +145,25 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 
 	const onDelete = () => {
 		if (entry) {
-			deleteEntry(entry.id);
-			router.back();
+			Alert.alert(
+				"Delete entry",
+				"Are you sure you want to delete this entry?",
+				[
+					{
+						text: "Cancel",
+						style: "cancel",
+					},
+					{
+						text: "Delete",
+						style: "destructive",
+						onPress: () => {
+							deleteEntry(entry.id);
+							router.back();
+						},
+					},
+				],
+				{ cancelable: true }
+			);
 		}
 	};
 
