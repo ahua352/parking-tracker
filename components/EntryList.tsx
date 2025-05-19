@@ -7,9 +7,10 @@ import {
 } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { FontAwesome } from "@expo/vector-icons";
-import { iconMap } from "@/constants/EntryConstants";
+import { EntryType, iconMap } from "@/constants/EntryConstants";
 import { useEntryContext } from "@/contexts/EntryContext";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 
 export function EntryList() {
 	const { entries } = useEntryContext();
@@ -53,7 +54,13 @@ export function EntryList() {
 		},
 		rightSection: { flexDirection: "column", flex: 1, marginLeft: 8 },
 		topTextContainer: { flexDirection: "row", flex: 1 },
+		filterButton: { backgroundColor: "plum", padding: 12, borderRadius: 8 },
+		filterText: {
+			fontWeight: "bold",
+		},
 	});
+
+	const [selectedFilter, setSelectedFilter] = useState<EntryType | null>(null);
 
 	return (
 		<ScrollView>
@@ -61,55 +68,82 @@ export function EntryList() {
 				{entries.length === 0 ? (
 					<ThemedText style={{ marginTop: 16 }}>No entries found.</ThemedText>
 				) : (
-					entries.map((e, i) => {
-						// Duration in minutes
-						const duration = Math.round(
-							(e.dateEnd.getTime() - e.dateStart.getTime()) / (1000 * 60)
-						);
-						const hours = Math.floor(duration / 60);
-						const minutes = duration % 60;
+					<>
+						<Pressable
+							onPress={() => {
+								if (selectedFilter !== EntryType.PARKING) {
+									setSelectedFilter(EntryType.PARKING);
+								} else {
+									setSelectedFilter(null);
+								}
+							}}
+						>
+							<View style={styles.filterButton}>
+								<ThemedText style={styles.filterText}>
+									Filter By Parking
+								</ThemedText>
+							</View>
+						</Pressable>
+						{entries
+							.filter((e) => {
+								if (selectedFilter === null) {
+									return true;
+								} else {
+									return e.type === selectedFilter;
+								}
+							})
+							.map((e, i) => {
+								// Duration in minutes
+								const duration = Math.round(
+									(e.dateEnd.getTime() - e.dateStart.getTime()) / (1000 * 60)
+								);
+								const hours = Math.floor(duration / 60);
+								const minutes = duration % 60;
 
-						return (
-							<Pressable
-								key={i}
-								style={({ pressed }: { pressed: boolean }) => [
-									styles.row,
-									pressed && styles.rowPressed,
-								]}
-								onPress={() => {
-									console.log(`Entry ${e.id} pressed`);
-									router.push({
-										pathname: "/editEntry",
-										params: { id: e.id.toString() },
-									});
-								}}
-							>
-								<View style={styles.iconCircle}>
-									<FontAwesome
-										name={iconMap[e.type]}
-										size={24}
-										color={colorScheme === "dark" ? "white" : "black"}
-									/>
-								</View>
-								<View style={styles.rightSection}>
-									<View style={styles.topTextContainer}>
-										<ThemedText type="subtitle" style={styles.textType}>
-											{e.type}
-										</ThemedText>
-										<ThemedText style={styles.duration}>
-											{minutes === 0 ? `${hours} h` : `${hours} h ${minutes} m`}
-										</ThemedText>
-									</View>
-									<View>
-										<ThemedText style={styles.dateStart}>
-											{e.dateStart.toLocaleString()}
-										</ThemedText>
-										<ThemedText>{e.location}</ThemedText>
-									</View>
-								</View>
-							</Pressable>
-						);
-					})
+								return (
+									<Pressable
+										key={i}
+										style={({ pressed }: { pressed: boolean }) => [
+											styles.row,
+											pressed && styles.rowPressed,
+										]}
+										onPress={() => {
+											console.log(`Entry ${e.id} pressed`);
+											router.push({
+												pathname: "/editEntry",
+												params: { id: e.id.toString() },
+											});
+										}}
+									>
+										<View style={styles.iconCircle}>
+											<FontAwesome
+												name={iconMap[e.type]}
+												size={24}
+												color={colorScheme === "dark" ? "white" : "black"}
+											/>
+										</View>
+										<View style={styles.rightSection}>
+											<View style={styles.topTextContainer}>
+												<ThemedText type="subtitle" style={styles.textType}>
+													{e.type}
+												</ThemedText>
+												<ThemedText style={styles.duration}>
+													{minutes === 0
+														? `${hours} h`
+														: `${hours} h ${minutes} m`}
+												</ThemedText>
+											</View>
+											<View>
+												<ThemedText style={styles.dateStart}>
+													{e.dateStart.toLocaleString()}
+												</ThemedText>
+												<ThemedText>{e.location}</ThemedText>
+											</View>
+										</View>
+									</Pressable>
+								);
+							})}
+					</>
 				)}
 			</View>
 		</ScrollView>
