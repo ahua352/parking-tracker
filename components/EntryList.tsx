@@ -76,6 +76,19 @@ export function EntryList() {
 
 	const [selectedFilter, setSelectedFilter] = useState<EntryType | null>(null);
 
+	const FilterButton = ({ type }: { type: EntryType }) => {
+		return (
+			<Pressable
+				style={styles.filterPressable}
+				onPress={() => setSelectedFilter(selectedFilter === type ? null : type)}
+			>
+				<View style={styles.filterButton}>
+					<ThemedText style={styles.filterText}>{type}</ThemedText>
+				</View>
+			</Pressable>
+		);
+	};
+
 	return (
 		<ScrollView>
 			<View>
@@ -85,48 +98,9 @@ export function EntryList() {
 					<>
 						<ThemedText style={styles.filterHeading}>Filter by:</ThemedText>
 						<View style={styles.filterContainer}>
-							<Pressable
-								style={styles.filterPressable}
-								onPress={() => {
-									if (selectedFilter !== EntryType.PARKING) {
-										setSelectedFilter(EntryType.PARKING);
-									} else {
-										setSelectedFilter(null);
-									}
-								}}
-							>
-								<View style={styles.filterButton}>
-									<ThemedText style={styles.filterText}>Parking</ThemedText>
-								</View>
-							</Pressable>
-							<Pressable
-								style={styles.filterPressable}
-								onPress={() => {
-									if (selectedFilter !== EntryType.WARDEN) {
-										setSelectedFilter(EntryType.WARDEN);
-									} else {
-										setSelectedFilter(null);
-									}
-								}}
-							>
-								<View style={styles.filterButton}>
-									<ThemedText style={styles.filterText}>Warden</ThemedText>
-								</View>
-							</Pressable>
-							<Pressable
-								style={styles.filterPressable}
-								onPress={() => {
-									if (selectedFilter !== EntryType.FINE) {
-										setSelectedFilter(EntryType.FINE);
-									} else {
-										setSelectedFilter(null);
-									}
-								}}
-							>
-								<View style={styles.filterButton}>
-									<ThemedText style={styles.filterText}>Fine</ThemedText>
-								</View>
-							</Pressable>
+							<FilterButton type={EntryType.PARKING} />
+							<FilterButton type={EntryType.WARDEN} />
+							<FilterButton type={EntryType.FINE} />
 						</View>
 						{entries
 							.filter((e) => {
