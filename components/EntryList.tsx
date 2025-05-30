@@ -11,6 +11,7 @@ import { EntryType, iconMap } from "@/constants/EntryConstants";
 import { useEntryContext } from "@/contexts/EntryContext";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
+import MapView from "react-native-maps";
 
 export function EntryList() {
 	const { entries } = useEntryContext();
@@ -71,6 +72,13 @@ export function EntryList() {
 		filterText: {
 			fontWeight: "bold",
 		},
+		mapContainer: {
+			flex: 1,
+		},
+		map: {
+			width: "100%",
+			height: 300,
+		},
 	});
 
 	const [selectedFilter, setSelectedFilter] = useState<EntryType | null>(null);
@@ -103,6 +111,9 @@ export function EntryList() {
 	return (
 		<ScrollView>
 			<View>
+				<View style={styles.mapContainer}>
+					<MapView style={styles.map} />
+				</View>
 				{entries.length === 0 ? (
 					<ThemedText style={{ marginTop: 16 }}>No entries found.</ThemedText>
 				) : (
