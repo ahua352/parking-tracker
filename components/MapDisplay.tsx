@@ -151,14 +151,13 @@ export function MapDisplay({
 	}, []);
 
 	const styles = StyleSheet.create({
-		container: { backgroundColor: "pink", padding: 8, gap: 8, flex: 1 },
+		container: { padding: 8, gap: 8, flex: 1 },
 		mapContainer: {
 			flex: 1,
 		},
 		map: {
 			width: "100%",
-			height: 300,
-			// flex: 1,
+			flex: 1,
 			backgroundColor: "lightgreen",
 		},
 		input: {
@@ -185,16 +184,6 @@ export function MapDisplay({
 			backgroundColor: colorScheme === "dark" ? "#535664" : "#a8a8a8",
 			borderRadius: 8,
 		},
-		// TODO: Remove later
-		inputExample: {
-			borderWidth: 1,
-			padding: 10,
-			paddingVertical: 14,
-			borderRadius: 8,
-			backgroundColor: colorScheme === "dark" ? "#292d3e" : "white",
-			borderColor: "black",
-			color: colorScheme === "dark" ? "#bfc7d5" : "black",
-		},
 		searchResults: {
 			backgroundColor: colorScheme === "dark" ? "#292d3e" : "white",
 			zIndex: 10,
@@ -216,16 +205,17 @@ export function MapDisplay({
 		searchResultItemPressed: {
 			backgroundColor: colorScheme === "dark" ? "#535664" : "#a8a8a8",
 		},
+		autocompleteContainer: {
+			position: "absolute",
+			top: 24,
+			left: 16,
+			right: 16,
+			zIndex: 10,
+		},
 	});
 	return (
 		<View style={styles.container}>
-			{/* <TextInput
-				placeholder="Optional"
-				style={styles.inputExample}
-				placeholderTextColor="#72777f"
-			/> */}
-
-			<View>
+			<View style={styles.autocompleteContainer}>
 				<View style={styles.inputContainer}>
 					<TextInput
 						onChangeText={setLocation}
@@ -272,7 +262,6 @@ export function MapDisplay({
 			</View>
 
 			<View style={styles.mapContainer}>
-				{/* <View style={styles.map}></View> */}
 				<MapView
 					style={styles.map}
 					region={
