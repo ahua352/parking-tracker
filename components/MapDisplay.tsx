@@ -199,6 +199,10 @@ export function MapDisplay() {
 			padding: 8,
 			paddingHorizontal: 12,
 		},
+		searchButtonPressed: {
+			backgroundColor: colorScheme === "dark" ? "#535664" : "#a8a8a8",
+			borderRadius: 8,
+		},
 		// TODO: Remove later
 		inputExample: {
 			borderWidth: 1,
@@ -227,6 +231,9 @@ export function MapDisplay() {
 		searchResultText: {
 			fontSize: 14,
 		},
+		searchResultItemPressed: {
+			backgroundColor: colorScheme === "dark" ? "#535664" : "#a8a8a8",
+		},
 	});
 	return (
 		<View style={styles.container}>
@@ -245,7 +252,13 @@ export function MapDisplay() {
 						style={styles.input}
 						placeholderTextColor="#72777f"
 					/>
-					<Pressable onPress={onPressSearch} style={styles.searchButton}>
+					<Pressable
+						onPress={onPressSearch}
+						style={({ pressed }: { pressed: boolean }) => [
+							styles.searchButton,
+							pressed && styles.searchButtonPressed,
+						]}
+					>
 						<FontAwesome
 							name={"search"}
 							size={20}
@@ -262,7 +275,10 @@ export function MapDisplay() {
 						renderItem={({ item }) => (
 							<Pressable
 								onPress={() => onPressItem(item)}
-								style={styles.searchResultItem}
+								style={({ pressed }: { pressed: boolean }) => [
+									styles.searchResultItem,
+									pressed && styles.searchResultItemPressed,
+								]}
 							>
 								<ThemedText style={styles.searchResultText}>
 									{item.placePrediction.text.text}
