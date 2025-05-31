@@ -77,7 +77,7 @@ export function MapDisplay() {
 		return data.suggestions;
 	};
 
-	const onPress = async () => {
+	const onPressSearch = async () => {
 		console.log("Search button pressed");
 
 		setSuggestions(dummySuggestions);
@@ -99,6 +99,12 @@ export function MapDisplay() {
 		// 	setSuggestions(suggestions);
 		// 	console.log(JSON.stringify(suggestions, null, 2));
 		// });
+	};
+
+	const onPressItem = (item: Suggestion) => {
+		console.log("Item pressed:", item);
+		setAddress(item.placePrediction.text.text);
+		setSuggestions([]);
 	};
 
 	const styles = StyleSheet.create({
@@ -177,7 +183,7 @@ export function MapDisplay() {
 						style={styles.input}
 						placeholderTextColor="#72777f"
 					/>
-					<Pressable onPress={onPress} style={styles.searchButton}>
+					<Pressable onPress={onPressSearch} style={styles.searchButton}>
 						<FontAwesome
 							name={"search"}
 							size={20}
@@ -193,10 +199,7 @@ export function MapDisplay() {
 						keyExtractor={(_, idx) => idx.toString()}
 						renderItem={({ item }) => (
 							<Pressable
-								onPress={() => {
-									setAddress(item.placePrediction.text.text);
-									setSuggestions([]);
-								}}
+								onPress={() => onPressItem(item)}
 								style={styles.searchResultItem}
 							>
 								<ThemedText style={styles.searchResultText}>
