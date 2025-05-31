@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import dummySuggestions from "../data/suggestions.json";
 import { Coordinate, Suggestion } from "@/constants/MapConstants";
+import { v4 as uuidv4 } from "uuid";
 
 type MapDisplayProps = {
 	location: string;
@@ -32,6 +33,7 @@ export function MapDisplay({
 	const colorScheme = useColorScheme();
 	const [userLocation, setUserLocation] = useState<Coordinate | null>(null);
 	const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+	const [sessionToken, setSessionToken] = useState<string>(uuidv4());
 
 	// Fetch autocomplete suggestions from Google Places API
 	const fetchAutocomplete = async (
@@ -43,6 +45,7 @@ export function MapDisplay({
 		const body: any = {
 			input,
 			languageCode: "en",
+			sessionToken,
 		};
 		if (location) {
 			body.locationBias = {
@@ -101,6 +104,7 @@ export function MapDisplay({
 				"Content-Type": "application/json",
 				"X-Goog-Api-Key": apiKey,
 				"X-Goog-FieldMask": "location",
+				"X-Goog-Session-Token": sessionToken,
 			},
 		});
 		const data = await response.json();
@@ -125,6 +129,8 @@ export function MapDisplay({
 			} else {
 				console.log("No location found for the selected place.");
 			}
+			console.log("Session token before reset:", sessionToken);
+			setSessionToken(uuidv4());
 		});
 	};
 

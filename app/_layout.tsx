@@ -9,7 +9,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
-
+import "react-native-get-random-values";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { EntryContextProvider } from "@/contexts/EntryContext";
 import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
