@@ -285,21 +285,15 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 				<View style={styles.field}>
 					<ThemedText style={styles.fieldTitle}>Location*</ThemedText>
 					<Pressable onPress={onOpenMap}>
-						<TextInput
-							onChangeText={setLocation}
-							value={location}
-							placeholder="Select location"
+						<ThemedText
 							style={[
 								styles.input,
-								{
-									borderColor: locationError ? "#f44336" : "black",
-									height: 52,
-									paddingVertical: 4,
-								},
+								{ fontSize: 14 },
+								!location && { color: "#72777f" },
 							]}
-							placeholderTextColor="#72777f"
-							editable={false}
-						/>
+						>
+							{location ? location : "Select location"}
+						</ThemedText>
 					</Pressable>
 				</View>
 				<View style={styles.field}>
