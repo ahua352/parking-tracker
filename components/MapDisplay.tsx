@@ -10,7 +10,7 @@ import MapView, { Marker } from "react-native-maps";
 import { ThemedText } from "./ThemedText";
 import Constants from "expo-constants";
 import * as Location from "expo-location";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import dummySuggestions from "../data/suggestions.json";
 import { Coordinate, Suggestion } from "@/constants/MapConstants";
@@ -31,6 +31,7 @@ export function MapDisplay({
 	const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
 	const colorScheme = useColorScheme();
 	const [userLocation, setUserLocation] = useState<Coordinate | null>(null);
+	const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
 	// Fetch autocomplete suggestions from Google Places API
 	const fetchAutocomplete = async (
@@ -149,6 +150,22 @@ export function MapDisplay({
 		}
 	}
 
+	const onChangeText = (text: string) => {
+		setLocation(text);
+
+		if (debounceTimer.current) {
+			clearTimeout(debounceTimer.current);
+		}
+
+		debounceTimer.current = setTimeout(() => {
+			if (text.length > 2) {
+				onPressSearch();
+			} else {
+				setSuggestions([]);
+			}
+		}, 250);
+	};
+
 	useEffect(() => {
 		getUserLocation();
 	}, []);
@@ -221,7 +238,7 @@ export function MapDisplay({
 			<View style={styles.autocompleteContainer}>
 				<View style={styles.inputContainer}>
 					<TextInput
-						onChangeText={setLocation}
+						onChangeText={onChangeText}
 						value={location}
 						placeholder="Enter location"
 						style={styles.input}
