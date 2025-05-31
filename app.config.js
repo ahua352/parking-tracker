@@ -45,6 +45,13 @@ export default {
 				},
 			],
 			"expo-sqlite",
+			[
+				"expo-location",
+				{
+					locationAlwaysAndWhenInUsePermission:
+						"Allow parking-tracker to use your location.",
+				},
+			],
 		],
 		experiments: {
 			typedRoutes: true,
