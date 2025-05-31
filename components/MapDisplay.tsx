@@ -10,6 +10,7 @@ import { ThemedText } from "./ThemedText";
 import Constants from "expo-constants";
 import * as Location from "expo-location";
 import { useState } from "react";
+import { FontAwesome } from "@expo/vector-icons";
 
 export function MapDisplay() {
 	const [address, setAddress] = useState("");
@@ -79,6 +80,26 @@ export function MapDisplay() {
 			height: 300,
 		},
 		input: {
+			color: colorScheme === "dark" ? "#bfc7d5" : "black",
+			flex: 1,
+		},
+		inputContainer: {
+			flexDirection: "row",
+			alignItems: "center",
+			borderWidth: 1,
+			padding: 6,
+			paddingVertical: 4,
+			borderRadius: 8,
+			backgroundColor: colorScheme === "dark" ? "#292d3e" : "white",
+			borderColor: "black",
+		},
+		searchButton: {
+			alignItems: "center",
+			padding: 8,
+			paddingHorizontal: 12,
+		},
+		// TODO: Remove later
+		inputExample: {
 			borderWidth: 1,
 			padding: 10,
 			paddingVertical: 14,
@@ -90,31 +111,32 @@ export function MapDisplay() {
 	});
 	return (
 		<View style={{ backgroundColor: "pink", padding: 8, gap: 8 }}>
-			<TextInput
-				onChangeText={setAddress}
-				value={address}
-				placeholder="Enter location"
-				style={styles.input}
+			{/* <TextInput
+				placeholder="Optional"
+				style={styles.inputExample}
 				placeholderTextColor="#72777f"
-			/>
-			<View>
-				<Pressable
-					onPress={onPress}
-					style={{
-						backgroundColor: "#2196f3",
-						borderRadius: 12,
-						paddingVertical: 12,
-						alignItems: "center",
-					}}
-				>
-					<ThemedText style={{ color: "white", fontWeight: "bold" }}>
-						Search
-					</ThemedText>
+			/> */}
+
+			<View style={styles.inputContainer}>
+				<TextInput
+					onChangeText={setAddress}
+					value={address}
+					placeholder="Enter location"
+					style={styles.input}
+					placeholderTextColor="#72777f"
+				/>
+				<Pressable onPress={onPress} style={styles.searchButton}>
+					<FontAwesome
+						name={"search"}
+						size={20}
+						color={colorScheme === "dark" ? "#bfc7d5" : "black"}
+					/>
 				</Pressable>
 			</View>
 
 			<View style={styles.mapContainer}>
-				<MapView style={styles.map} />
+				<View style={[styles.map, { backgroundColor: "lightgreen" }]}></View>
+				{/* <MapView style={styles.map} /> */}
 			</View>
 		</View>
 	);
