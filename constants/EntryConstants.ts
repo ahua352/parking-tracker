@@ -19,4 +19,5 @@ export interface Entry {
 	type: EntryType;
 	name: string;
 	notes: string;
+	coordinates: { latitude: number; longitude: number } | null;
 }

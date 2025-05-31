@@ -128,6 +128,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 					type: dropdownValue,
 					name: name,
 					notes: notes,
+					coordinates: coordinates,
 				};
 
 				addEntry(entryNew);
@@ -141,6 +142,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 					type: dropdownValue,
 					name: name,
 					notes: notes,
+					coordinates: coordinates,
 				};
 
 				updateEntry(entryNew);
@@ -195,6 +197,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 			setStartDate(entry ? new Date(entry.dateStart) : new Date());
 			setEndDate(entry ? new Date(entry.dateEnd) : new Date());
 			setDropdownValue(entry ? entry.type : null);
+			setCoordinates(entry ? entry.coordinates : null);
 		}, [entry])
 	);
 

@@ -26,6 +26,10 @@ const mapEntries = (result: any[]): Entry[] => {
 		type: row.type,
 		name: row.name,
 		notes: row.notes,
+		coordinates:
+			row.latitude && row.longitude
+				? { latitude: row.latitude, longitude: row.longitude }
+				: null,
 	}));
 };
 
@@ -80,7 +84,7 @@ export const EntryContextProvider = ({ children }: { children: ReactNode }) => {
 		try {
 			// Add entry to database
 			await database.runAsync(
-				"INSERT INTO entries (dateStart, dateEnd, location, type, name, notes) VALUES (?, ?, ?, ?, ?, ?)",
+				"INSERT INTO entries (dateStart, dateEnd, location, type, name, notes, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
 				[
 					entry.dateStart.getTime(),
 					entry.dateEnd.getTime(),
@@ -88,6 +92,8 @@ export const EntryContextProvider = ({ children }: { children: ReactNode }) => {
 					entry.type,
 					entry.name,
 					entry.notes,
+					entry.coordinates?.latitude ?? null,
+					entry.coordinates?.longitude ?? null,
 				]
 			);
 			console.log("Entry added to database:", entry);
@@ -102,7 +108,7 @@ export const EntryContextProvider = ({ children }: { children: ReactNode }) => {
 		// Update entry in database
 		try {
 			await database.runAsync(
-				"UPDATE entries SET dateStart = ?, dateEnd = ?, location = ?, type = ?, name = ?, notes = ? WHERE id = ?",
+				"UPDATE entries SET dateStart = ?, dateEnd = ?, location = ?, type = ?, name = ?, notes = ?, latitude = ?, longitude = ? WHERE id = ?",
 				[
 					updatedEntry.dateStart.getTime(),
 					updatedEntry.dateEnd.getTime(),
@@ -110,6 +116,8 @@ export const EntryContextProvider = ({ children }: { children: ReactNode }) => {
 					updatedEntry.type,
 					updatedEntry.name,
 					updatedEntry.notes,
+					updatedEntry.coordinates?.latitude ?? null,
+					updatedEntry.coordinates?.longitude ?? null,
 					updatedEntry.id,
 				]
 			);

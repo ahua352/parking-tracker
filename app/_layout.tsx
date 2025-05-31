@@ -43,7 +43,9 @@ export default function RootLayout() {
 				notes TEXT,
 				location TEXT,
 				dateStart INTEGER,
-				dateEnd INTEGER
+				dateEnd INTEGER,
+				latitude REAL,
+            	longitude REAL
 			);`
 		);
 	};
