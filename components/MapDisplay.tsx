@@ -1,27 +1,20 @@
-import { Pressable, StyleSheet, View } from "react-native";
+import {
+	Pressable,
+	StyleSheet,
+	TextInput,
+	useColorScheme,
+	View,
+} from "react-native";
 import MapView from "react-native-maps";
 import { ThemedText } from "./ThemedText";
 import Constants from "expo-constants";
 import * as Location from "expo-location";
-
-const styles = StyleSheet.create({
-	mapContainer: {
-		flex: 1,
-	},
-	map: {
-		width: "100%",
-		height: 300,
-	},
-	inputContainer: {
-		width: "100%", // Ensure full width
-		paddingHorizontal: 16,
-	},
-	input: {
-		height: 40, // Comfortable touch target
-	},
-});
+import { useState } from "react";
 
 export function MapDisplay() {
+	const [address, setAddress] = useState("");
+	const colorScheme = useColorScheme();
+
 	// Fetch autocomplete suggestions from Google Places API
 	const fetchAutocomplete = async (
 		input: string,
@@ -72,12 +65,38 @@ export function MapDisplay() {
 		} catch (e) {
 			console.log("Location error:", e);
 		}
-		fetchAutocomplete("1 Astley", userLocation).then((suggestions) => {
+		fetchAutocomplete(address, userLocation).then((suggestions) => {
 			console.log(JSON.stringify(suggestions, null, 2));
 		});
 	};
+
+	const styles = StyleSheet.create({
+		mapContainer: {
+			flex: 1,
+		},
+		map: {
+			width: "100%",
+			height: 300,
+		},
+		input: {
+			borderWidth: 1,
+			padding: 10,
+			paddingVertical: 14,
+			borderRadius: 8,
+			backgroundColor: colorScheme === "dark" ? "#292d3e" : "white",
+			borderColor: "black",
+			color: colorScheme === "dark" ? "#bfc7d5" : "black",
+		},
+	});
 	return (
 		<View style={{ backgroundColor: "pink", padding: 8, gap: 8 }}>
+			<TextInput
+				onChangeText={setAddress}
+				value={address}
+				placeholder="Enter location"
+				style={styles.input}
+				placeholderTextColor="#72777f"
+			/>
 			<View>
 				<Pressable
 					onPress={onPress}
