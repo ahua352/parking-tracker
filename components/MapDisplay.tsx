@@ -172,6 +172,14 @@ export function MapDisplay({
 		}, 250);
 	};
 
+	const onPressClear = () => {
+		setLocation("");
+		setSuggestions([]);
+		if (debounceTimer.current) {
+			clearTimeout(debounceTimer.current);
+		}
+	};
+
 	useEffect(() => {
 		getUserLocation();
 	}, []);
@@ -251,14 +259,14 @@ export function MapDisplay({
 						placeholderTextColor="#72777f"
 					/>
 					<Pressable
-						onPress={onPressSearch}
+						onPress={onPressClear}
 						style={({ pressed }: { pressed: boolean }) => [
 							styles.searchButton,
 							pressed && styles.searchButtonPressed,
 						]}
 					>
 						<FontAwesome
-							name={"search"}
+							name={"close"}
 							size={20}
 							color={colorScheme === "dark" ? "#bfc7d5" : "black"}
 						/>

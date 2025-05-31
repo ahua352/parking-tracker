@@ -381,7 +381,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 							}}
 						>
 							<FontAwesome
-								name={"close"}
+								name={"check"}
 								size={24}
 								color={colorScheme === "dark" ? "#bfc7d5" : "black"}
 							/>
