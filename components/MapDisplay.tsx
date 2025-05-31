@@ -6,7 +6,7 @@ import {
 	useColorScheme,
 	View,
 } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import { ThemedText } from "./ThemedText";
 import Constants from "expo-constants";
 import * as Location from "expo-location";
@@ -14,34 +14,41 @@ import { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import dummySuggestions from "../data/suggestions.json";
 
-export function MapDisplay() {
-	const [address, setAddress] = useState("");
-	type Suggestion = {
-		placePrediction: {
-			place: string;
-			placeId: string;
-			text: {
+type Suggestion = {
+	placePrediction: {
+		place: string;
+		placeId: string;
+		text: {
+			text: string;
+			matches?: {
+				endOffset: number;
+			}[];
+		};
+		structuredFormat?: {
+			mainText: {
 				text: string;
 				matches?: {
 					endOffset: number;
 				}[];
 			};
-			structuredFormat?: {
-				mainText: {
-					text: string;
-					matches?: {
-						endOffset: number;
-					}[];
-				};
-				secondaryText: {
-					text: string;
-				};
+			secondaryText: {
+				text: string;
 			};
-			types?: string[];
 		};
+		types?: string[];
 	};
+};
+
+type Coordinate = {
+	latitude: number;
+	longitude: number;
+};
+export function MapDisplay() {
+	const [address, setAddress] = useState("");
+
 	const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
 	const colorScheme = useColorScheme();
+	const [coordinates, setCoordinates] = useState<Coordinate | null>(null);
 
 	// Fetch autocomplete suggestions from Google Places API
 	const fetchAutocomplete = async (
@@ -101,10 +108,41 @@ export function MapDisplay() {
 		// });
 	};
 
+	const fetchPlaceDetails = async (item: Suggestion) => {
+		const apiKey = Constants.expoConfig?.extra?.googleMapsApiKey;
+		const url =
+			"https://places.googleapis.com/v1/places/" + item.placePrediction.placeId;
+		const response = await fetch(url, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"X-Goog-Api-Key": apiKey,
+				"X-Goog-FieldMask": "location",
+			},
+		});
+		const data = await response.json();
+
+		console.log("Place details:", data);
+
+		return data;
+	};
+
 	const onPressItem = (item: Suggestion) => {
 		console.log("Item pressed:", item);
+
 		setAddress(item.placePrediction.text.text);
 		setSuggestions([]);
+
+		fetchPlaceDetails(item).then((details) => {
+			if (details.location) {
+				setCoordinates({
+					latitude: details.location.latitude,
+					longitude: details.location.longitude,
+				});
+			} else {
+				console.log("No location found for the selected place.");
+			}
+		});
 	};
 
 	const styles = StyleSheet.create({
@@ -212,8 +250,21 @@ export function MapDisplay() {
 			</View>
 
 			<View style={styles.mapContainer}>
-				<View style={styles.map}></View>
-				{/* <MapView style={styles.map} /> */}
+				{/* <View style={styles.map}></View> */}
+				<MapView
+					style={styles.map}
+					region={
+						coordinates
+							? {
+									...coordinates,
+									latitudeDelta: 0.01,
+									longitudeDelta: 0.01,
+							  }
+							: undefined
+					}
+				>
+					{coordinates && <Marker coordinate={coordinates} />}
+				</MapView>
 			</View>
 		</View>
 	);
