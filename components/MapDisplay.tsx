@@ -10,7 +10,7 @@ import MapView, { Marker } from "react-native-maps";
 import { ThemedText } from "./ThemedText";
 import Constants from "expo-constants";
 import * as Location from "expo-location";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import dummySuggestions from "../data/suggestions.json";
 
@@ -43,12 +43,13 @@ type Coordinate = {
 	latitude: number;
 	longitude: number;
 };
+
 export function MapDisplay() {
 	const [address, setAddress] = useState("");
-
 	const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
 	const colorScheme = useColorScheme();
 	const [coordinates, setCoordinates] = useState<Coordinate | null>(null);
+	const [userLocation, setUserLocation] = useState<Coordinate | null>(null);
 
 	// Fetch autocomplete suggestions from Google Places API
 	const fetchAutocomplete = async (
@@ -87,25 +88,22 @@ export function MapDisplay() {
 	const onPressSearch = async () => {
 		console.log("Search button pressed");
 
-		setSuggestions(dummySuggestions);
+		// setSuggestions(dummySuggestions);
 
-		// let userLocation = undefined;
-		// try {
-		// 	const { status } = await Location.requestForegroundPermissionsAsync();
-		// 	if (status === "granted") {
-		// 		const location = await Location.getCurrentPositionAsync({});
-		// 		userLocation = {
-		// 			lat: location.coords.latitude,
-		// 			lng: location.coords.longitude,
-		// 		};
-		// 	}
-		// } catch (e) {
-		// 	console.log("Location error:", e);
-		// }
-		// fetchAutocomplete(address, userLocation).then((suggestions) => {
-		// 	setSuggestions(suggestions);
-		// 	console.log(JSON.stringify(suggestions, null, 2));
-		// });
+		if (userLocation) {
+			fetchAutocomplete(address, {
+				lat: userLocation.latitude,
+				lng: userLocation.longitude,
+			}).then((suggestions) => {
+				setSuggestions(suggestions);
+				console.log(JSON.stringify(suggestions, null, 2));
+			});
+		} else {
+			fetchAutocomplete(address).then((suggestions) => {
+				setSuggestions(suggestions);
+				console.log(JSON.stringify(suggestions, null, 2));
+			});
+		}
 	};
 
 	const fetchPlaceDetails = async (item: Suggestion) => {
@@ -144,6 +142,32 @@ export function MapDisplay() {
 			}
 		});
 	};
+
+	async function getUserLocation() {
+		try {
+			const { status } = await Location.requestForegroundPermissionsAsync();
+			if (status === "granted") {
+				const location = await Location.getCurrentPositionAsync({});
+				console.log("User location:", location);
+				const coordinates = {
+					latitude: location.coords.latitude,
+					longitude: location.coords.longitude,
+				};
+				setUserLocation(coordinates);
+				return coordinates;
+			} else {
+				console.log("Location permission not granted");
+				return null;
+			}
+		} catch (e) {
+			console.log("Location error:", e);
+			return null;
+		}
+	}
+
+	useEffect(() => {
+		getUserLocation();
+	}, []);
 
 	const styles = StyleSheet.create({
 		container: { backgroundColor: "pink", padding: 8, gap: 8 },
@@ -257,6 +281,12 @@ export function MapDisplay() {
 						coordinates
 							? {
 									...coordinates,
+									latitudeDelta: 0.01,
+									longitudeDelta: 0.01,
+							  }
+							: userLocation
+							? {
+									...userLocation,
 									latitudeDelta: 0.01,
 									longitudeDelta: 0.01,
 							  }
