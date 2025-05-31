@@ -59,10 +59,13 @@ export function MapDisplay({
 			headers: {
 				"Content-Type": "application/json",
 				"X-Goog-Api-Key": apiKey,
+				"X-Goog-FieldMask":
+					"suggestions.placePrediction.text.text,suggestions.placePrediction.placeId",
 			},
 			body: JSON.stringify(body),
 		});
 		const data = await response.json();
+
 		return data.suggestions;
 	};
 
