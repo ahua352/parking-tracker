@@ -13,42 +13,23 @@ import * as Location from "expo-location";
 import { useEffect, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import dummySuggestions from "../data/suggestions.json";
+import { Coordinate, Suggestion } from "@/constants/MapConstants";
 
-type Suggestion = {
-	placePrediction: {
-		place: string;
-		placeId: string;
-		text: {
-			text: string;
-			matches?: {
-				endOffset: number;
-			}[];
-		};
-		structuredFormat?: {
-			mainText: {
-				text: string;
-				matches?: {
-					endOffset: number;
-				}[];
-			};
-			secondaryText: {
-				text: string;
-			};
-		};
-		types?: string[];
-	};
+type MapDisplayProps = {
+	location: string;
+	setLocation: (location: string) => void;
+	coordinates: Coordinate | null;
+	setCoordinates: (coordinates: Coordinate) => void;
 };
 
-type Coordinate = {
-	latitude: number;
-	longitude: number;
-};
-
-export function MapDisplay() {
-	const [address, setAddress] = useState("");
+export function MapDisplay({
+	location,
+	setLocation,
+	coordinates,
+	setCoordinates,
+}: MapDisplayProps) {
 	const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
 	const colorScheme = useColorScheme();
-	const [coordinates, setCoordinates] = useState<Coordinate | null>(null);
 	const [userLocation, setUserLocation] = useState<Coordinate | null>(null);
 
 	// Fetch autocomplete suggestions from Google Places API
@@ -91,7 +72,7 @@ export function MapDisplay() {
 		// setSuggestions(dummySuggestions);
 
 		if (userLocation) {
-			fetchAutocomplete(address, {
+			fetchAutocomplete(location, {
 				lat: userLocation.latitude,
 				lng: userLocation.longitude,
 			}).then((suggestions) => {
@@ -99,7 +80,7 @@ export function MapDisplay() {
 				console.log(JSON.stringify(suggestions, null, 2));
 			});
 		} else {
-			fetchAutocomplete(address).then((suggestions) => {
+			fetchAutocomplete(location).then((suggestions) => {
 				setSuggestions(suggestions);
 				console.log(JSON.stringify(suggestions, null, 2));
 			});
@@ -128,7 +109,7 @@ export function MapDisplay() {
 	const onPressItem = (item: Suggestion) => {
 		console.log("Item pressed:", item);
 
-		setAddress(item.placePrediction.text.text);
+		setLocation(item.placePrediction.text.text);
 		setSuggestions([]);
 
 		fetchPlaceDetails(item).then((details) => {
@@ -170,13 +151,14 @@ export function MapDisplay() {
 	}, []);
 
 	const styles = StyleSheet.create({
-		container: { backgroundColor: "pink", padding: 8, gap: 8 },
+		container: { backgroundColor: "pink", padding: 8, gap: 8, flex: 1 },
 		mapContainer: {
 			flex: 1,
 		},
 		map: {
 			width: "100%",
 			height: 300,
+			// flex: 1,
 			backgroundColor: "lightgreen",
 		},
 		input: {
@@ -246,8 +228,8 @@ export function MapDisplay() {
 			<View>
 				<View style={styles.inputContainer}>
 					<TextInput
-						onChangeText={setAddress}
-						value={address}
+						onChangeText={setLocation}
+						value={location}
 						placeholder="Enter location"
 						style={styles.input}
 						placeholderTextColor="#72777f"

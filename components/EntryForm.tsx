@@ -8,15 +8,18 @@ import {
 	Platform,
 	KeyboardAvoidingView,
 	Alert,
+	Modal,
 } from "react-native";
 import { ThemedText } from "./ThemedText";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { FontAwesome } from "@expo/vector-icons";
 import { Entry, EntryType, iconMap } from "@/constants/EntryConstants";
 import { useEntryContext } from "@/contexts/EntryContext";
 import { useFocusEffect, useRouter } from "expo-router";
+import { MapDisplay } from "./MapDisplay";
+import { Coordinate } from "@/constants/MapConstants";
 
 export function EntryForm({ entry }: { entry?: Entry }) {
 	const router = useRouter();
@@ -37,6 +40,9 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 		field: { flexDirection: "column", gap: 6 },
 		fieldTitle: { fontWeight: "bold" },
 	});
+
+	const [isMapModalVisible, setIsMapModalVisible] = useState(false);
+	const [coordinates, setCoordinates] = useState<Coordinate | null>(null);
 
 	const [name, setName] = useState(entry ? entry.name : "");
 	const [notes, setNotes] = useState(entry ? entry.notes : "");
@@ -167,6 +173,19 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 		}
 	};
 
+	const onOpenMap = () => {
+		setIsMapModalVisible(true);
+	};
+
+	const onCloseMap = () => {
+		setIsMapModalVisible(false);
+	};
+
+	useEffect(() => {
+		console.log("Address:", location);
+		console.log("Coordinates:", coordinates);
+	}, [location, coordinates]);
+
 	// Reset fields when component is focused
 	useFocusEffect(
 		useCallback(() => {
@@ -262,16 +281,23 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 				)}
 				<View style={styles.field}>
 					<ThemedText style={styles.fieldTitle}>Location*</ThemedText>
-					<TextInput
-						onChangeText={setLocation}
-						value={location}
-						placeholder="Enter location"
-						style={[
-							styles.input,
-							{ borderColor: locationError ? "#f44336" : "black" },
-						]}
-						placeholderTextColor="#72777f"
-					/>
+					<Pressable onPress={onOpenMap}>
+						<TextInput
+							onChangeText={setLocation}
+							value={location}
+							placeholder="Select location"
+							style={[
+								styles.input,
+								{
+									borderColor: locationError ? "#f44336" : "black",
+									height: 52,
+									paddingVertical: 4,
+								},
+							]}
+							placeholderTextColor="#72777f"
+							editable={false}
+						/>
+					</Pressable>
 				</View>
 				<View style={styles.field}>
 					<ThemedText style={styles.fieldTitle}>Notes</ThemedText>
@@ -318,6 +344,54 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 					</View>
 				)}
 			</View>
+
+			<Modal
+				visible={isMapModalVisible}
+				animationType="slide"
+				onRequestClose={onCloseMap}
+				transparent={false}
+			>
+				<View
+					style={{
+						flex: 1,
+						backgroundColor: colorScheme === "dark" ? "#151718" : "white",
+					}}
+				>
+					<View
+						style={{
+							padding: 16,
+							flexDirection: "row",
+							alignItems: "center",
+							justifyContent: "space-between",
+						}}
+					>
+						<ThemedText type="title" style={{ fontSize: 24 }}>
+							Select Location
+						</ThemedText>
+						<Pressable
+							onPress={onCloseMap}
+							style={{
+								padding: 4,
+								paddingHorizontal: 8,
+								width: 50,
+								alignItems: "center",
+							}}
+						>
+							<FontAwesome
+								name={"close"}
+								size={24}
+								color={colorScheme === "dark" ? "#bfc7d5" : "black"}
+							/>
+						</Pressable>
+					</View>
+					<MapDisplay
+						location={location}
+						setLocation={setLocation}
+						coordinates={coordinates}
+						setCoordinates={setCoordinates}
+					/>
+				</View>
+			</Modal>
 		</KeyboardAvoidingView>
 	);
 }

@@ -11,7 +11,6 @@ import { EntryType, iconMap } from "@/constants/EntryConstants";
 import { useEntryContext } from "@/contexts/EntryContext";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { MapDisplay } from "./MapDisplay";
 
 export function EntryList() {
 	const { entries } = useEntryContext();
@@ -111,7 +110,6 @@ export function EntryList() {
 	return (
 		<ScrollView>
 			<View>
-				<MapDisplay />
 				{entries.length === 0 ? (
 					<ThemedText style={{ marginTop: 16 }}>No entries found.</ThemedText>
 				) : (
