@@ -4,6 +4,7 @@ import {
 	Pressable,
 	ScrollView,
 	useColorScheme,
+	TextInput,
 } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { FontAwesome } from "@expo/vector-icons";
@@ -12,11 +13,20 @@ import { useEntryContext } from "@/contexts/EntryContext";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Palette } from "@/constants/Colors";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 export function EntryList() {
 	const { entries } = useEntryContext();
 	const router = useRouter();
 	const colorScheme = useColorScheme();
+	const initialStartDate = undefined;
+	const initialEndDate = undefined;
+	const [isEditStartDate, setIsEditStartDate] = useState(true);
+	const [startDate, setStartDate] = useState<Date | undefined>(
+		initialStartDate
+	);
+	const [endDate, setEndDate] = useState<Date | undefined>(initialEndDate);
+	const [showDatePicker, setShowDatePicker] = useState(false);
 
 	const styles = StyleSheet.create({
 		iconCircle: {
@@ -110,6 +120,69 @@ export function EntryList() {
 		);
 	};
 
+	const onChangeDate = (event: any, selectedDate?: Date) => {
+		// Update selected date
+		if (event.type === "set" && selectedDate) {
+			if (isEditStartDate) {
+				const correctedStartDate = new Date(
+					selectedDate.getFullYear(),
+					selectedDate.getMonth(),
+					selectedDate.getDate(),
+					0,
+					0,
+					0,
+					0
+				);
+
+				setStartDate(correctedStartDate);
+			} else {
+				const correctedEndDate = new Date(
+					selectedDate.getFullYear(),
+					selectedDate.getMonth(),
+					selectedDate.getDate(),
+					23,
+					59,
+					59,
+					999
+				);
+
+				setEndDate(correctedEndDate);
+			}
+			setShowDatePicker(false);
+			// Close date picker
+		} else {
+			setShowDatePicker(false);
+		}
+	};
+
+	const DateFilterButton = ({ isStartDate }: { isStartDate: boolean }) => {
+		return (
+			<View>
+				<Pressable
+					onPress={() => {
+						setIsEditStartDate(isStartDate);
+						setShowDatePicker(true);
+					}}
+					style={styles.filterPressable}
+				>
+					<TextInput
+						value={
+							isStartDate
+								? startDate
+									? "Start: " + startDate.toLocaleDateString()
+									: "Start: DD/MM/YYYY"
+								: endDate
+								? "End: " + endDate.toLocaleDateString()
+								: "End: DD/MM/YYYY"
+						}
+						editable={false}
+						style={[styles.filterButton, { backgroundColor: Palette.blue }]}
+					/>
+				</Pressable>
+			</View>
+		);
+	};
+
 	return (
 		<ScrollView>
 			<View>
@@ -123,6 +196,30 @@ export function EntryList() {
 							<FilterButton type={EntryType.WARDEN} />
 							<FilterButton type={EntryType.FINE} />
 						</View>
+						<View style={styles.filterContainer}>
+							<DateFilterButton isStartDate={true} />
+							<DateFilterButton isStartDate={false} />
+						</View>
+						{showDatePicker && (
+							<DateTimePicker
+								value={
+									isEditStartDate
+										? startDate ?? new Date()
+										: endDate ?? new Date()
+								}
+								mode="date"
+								onChange={onChangeDate}
+								minimumDate={isEditStartDate ? undefined : startDate}
+								maximumDate={
+									isEditStartDate
+										? endDate
+											? endDate
+											: new Date()
+										: new Date()
+								}
+							/>
+						)}
+
 						{entries
 							.filter((e) => {
 								if (selectedFilter === null) {
