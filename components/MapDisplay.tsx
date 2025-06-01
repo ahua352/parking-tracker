@@ -231,6 +231,8 @@ export function MapDisplay({
 			top: -6,
 			left: 0,
 			right: 0,
+			borderColor: Palette.black,
+			borderWidth: 1,
 		},
 		searchResultItem: {
 			padding: 8,
