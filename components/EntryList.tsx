@@ -246,6 +246,16 @@ export function EntryList() {
 									return e.type === selectedFilter;
 								}
 							})
+							.filter((e) => {
+								if (startDate && endDate) {
+									return e.dateStart >= startDate && e.dateEnd <= endDate;
+								} else if (startDate) {
+									return e.dateStart >= startDate;
+								} else if (endDate) {
+									return e.dateEnd <= endDate;
+								}
+								return true;
+							})
 							.map((e, i) => {
 								// Duration in minutes
 								const duration = Math.round(
