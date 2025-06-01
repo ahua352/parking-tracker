@@ -20,6 +20,7 @@ import { useEntryContext } from "@/contexts/EntryContext";
 import { useFocusEffect, useRouter } from "expo-router";
 import { MapDisplay } from "./MapDisplay";
 import { Coordinate } from "@/constants/MapConstants";
+import { Palette } from "@/constants/Colors";
 
 export function EntryForm({ entry }: { entry?: Entry }) {
 	const router = useRouter();
@@ -32,9 +33,10 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 			padding: 10,
 			paddingVertical: 14,
 			borderRadius: 8,
-			backgroundColor: colorScheme === "dark" ? "#292d3e" : "white",
-			borderColor: "black",
-			color: colorScheme === "dark" ? "#bfc7d5" : "black",
+			backgroundColor:
+				colorScheme === "dark" ? Palette.blueNavy : Palette.white,
+			borderColor: Palette.black,
+			color: colorScheme === "dark" ? Palette.greyLight3 : Palette.black,
 		},
 		container: { marginTop: 16, flexDirection: "column", gap: 16 },
 		field: { flexDirection: "column", gap: 6 },
@@ -61,7 +63,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 					<FontAwesome
 						name={iconMap[type]}
 						size={20}
-						color={colorScheme === "dark" ? "#bfc7d5" : "black"}
+						color={colorScheme === "dark" ? Palette.greyLight3 : Palette.black}
 					/>
 				</View>
 			),
@@ -218,9 +220,9 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 						setItems={setDropdownItems}
 						placeholder="Select an option"
 						theme={colorScheme === "dark" ? "DARK" : "LIGHT"}
-						style={{ borderColor: dropdownError ? "#f44336" : "black" }}
+						style={{ borderColor: dropdownError ? Palette.red : Palette.black }}
 						placeholderStyle={{
-							color: "#72777f",
+							color: Palette.grey,
 						}}
 					/>
 				</View>
@@ -231,7 +233,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 						value={name}
 						placeholder="Optional"
 						style={styles.input}
-						placeholderTextColor="#72777f"
+						placeholderTextColor={Palette.grey}
 					/>
 				</View>
 				<View style={styles.field}>
@@ -289,7 +291,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 							style={[
 								styles.input,
 								{ fontSize: 14 },
-								!location && { color: "#72777f" },
+								!location && { color: Palette.grey },
 							]}
 						>
 							{location ? location : "Select location"}
@@ -303,7 +305,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 						value={notes}
 						placeholder="Optional"
 						style={styles.input}
-						placeholderTextColor="#72777f"
+						placeholderTextColor={Palette.grey}
 					/>
 				</View>
 
@@ -311,13 +313,13 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 					<Pressable
 						onPress={onSave}
 						style={{
-							backgroundColor: "#2196f3",
+							backgroundColor: Palette.blue,
 							borderRadius: 12,
 							paddingVertical: 12,
 							alignItems: "center",
 						}}
 					>
-						<ThemedText style={{ color: "white", fontWeight: "bold" }}>
+						<ThemedText style={{ color: Palette.white, fontWeight: "bold" }}>
 							Save
 						</ThemedText>
 					</Pressable>
@@ -328,13 +330,13 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 						<Pressable
 							onPress={onDelete}
 							style={{
-								backgroundColor: "#f44336",
+								backgroundColor: Palette.red,
 								borderRadius: 12,
 								paddingVertical: 12,
 								alignItems: "center",
 							}}
 						>
-							<ThemedText style={{ color: "white", fontWeight: "bold" }}>
+							<ThemedText style={{ color: Palette.white, fontWeight: "bold" }}>
 								Delete
 							</ThemedText>
 						</Pressable>
@@ -351,7 +353,8 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 				<View
 					style={{
 						flex: 1,
-						backgroundColor: colorScheme === "dark" ? "#151718" : "white",
+						backgroundColor:
+							colorScheme === "dark" ? Palette.black : Palette.white,
 					}}
 				>
 					<View
@@ -377,7 +380,9 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 							<FontAwesome
 								name={"check"}
 								size={24}
-								color={colorScheme === "dark" ? "#bfc7d5" : "black"}
+								color={
+									colorScheme === "dark" ? Palette.greyLight3 : Palette.black
+								}
 							/>
 						</Pressable>
 					</View>

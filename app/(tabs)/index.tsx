@@ -5,11 +5,15 @@ import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { EntryList } from "@/components/EntryList";
+import { Palette } from "@/constants/Colors";
 
 export default function HomeScreen() {
 	return (
 		<ParallaxScrollView
-			headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
+			headerBackgroundColor={{
+				light: Palette.blueLight2,
+				dark: Palette.blueDark2,
+			}}
 			headerImage={
 				<Image
 					source={require("@/assets/images/car-header.png")}

@@ -15,6 +15,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import dummySuggestions from "../data/suggestions.json";
 import { Coordinate, Suggestion } from "@/constants/MapConstants";
 import { v4 as uuidv4 } from "uuid";
+import { Palette } from "@/constants/Colors";
 
 type MapDisplayProps = {
 	location: string;
@@ -192,10 +193,10 @@ export function MapDisplay({
 		map: {
 			width: "100%",
 			flex: 1,
-			backgroundColor: "lightgreen",
+			// backgroundColor: "lightgreen",
 		},
 		input: {
-			color: colorScheme === "dark" ? "#bfc7d5" : "black",
+			color: colorScheme === "dark" ? Palette.greyLight3 : Palette.black,
 			flex: 1,
 		},
 		inputContainer: {
@@ -206,8 +207,9 @@ export function MapDisplay({
 			padding: 6,
 			paddingVertical: 4,
 			borderRadius: 8,
-			backgroundColor: colorScheme === "dark" ? "#292d3e" : "white",
-			borderColor: "black",
+			backgroundColor:
+				colorScheme === "dark" ? Palette.blueNavy : Palette.white,
+			borderColor: Palette.black,
 		},
 		searchButton: {
 			alignItems: "center",
@@ -215,11 +217,13 @@ export function MapDisplay({
 			paddingHorizontal: 12,
 		},
 		searchButtonPressed: {
-			backgroundColor: colorScheme === "dark" ? "#535664" : "#a8a8a8",
+			backgroundColor:
+				colorScheme === "dark" ? Palette.greyDark : Palette.greyLight2,
 			borderRadius: 8,
 		},
 		searchResults: {
-			backgroundColor: colorScheme === "dark" ? "#292d3e" : "white",
+			backgroundColor:
+				colorScheme === "dark" ? Palette.blueNavy : Palette.white,
 			zIndex: 10,
 			borderBottomLeftRadius: 8,
 			borderBottomRightRadius: 8,
@@ -231,13 +235,15 @@ export function MapDisplay({
 		searchResultItem: {
 			padding: 8,
 			borderBottomWidth: 1,
-			borderBottomColor: colorScheme === "dark" ? "#444" : "#ccc",
+			borderBottomColor:
+				colorScheme === "dark" ? Palette.greyDark2 : Palette.greyLight,
 		},
 		searchResultText: {
 			fontSize: 14,
 		},
 		searchResultItemPressed: {
-			backgroundColor: colorScheme === "dark" ? "#535664" : "#a8a8a8",
+			backgroundColor:
+				colorScheme === "dark" ? Palette.greyDark : Palette.greyLight2,
 		},
 		autocompleteContainer: {
 			position: "absolute",
@@ -256,7 +262,7 @@ export function MapDisplay({
 						value={location}
 						placeholder="Enter location"
 						style={styles.input}
-						placeholderTextColor="#72777f"
+						placeholderTextColor={Palette.grey}
 					/>
 					<Pressable
 						onPress={onPressClear}
@@ -268,7 +274,9 @@ export function MapDisplay({
 						<FontAwesome
 							name={"close"}
 							size={20}
-							color={colorScheme === "dark" ? "#bfc7d5" : "black"}
+							color={
+								colorScheme === "dark" ? Palette.greyLight3 : Palette.black
+							}
 						/>
 					</Pressable>
 				</View>

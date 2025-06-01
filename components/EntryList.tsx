@@ -11,6 +11,7 @@ import { EntryType, iconMap } from "@/constants/EntryConstants";
 import { useEntryContext } from "@/contexts/EntryContext";
 import { useRouter } from "expo-router";
 import { useState } from "react";
+import { Palette } from "@/constants/Colors";
 
 export function EntryList() {
 	const { entries } = useEntryContext();
@@ -22,21 +23,23 @@ export function EntryList() {
 			width: 50,
 			height: 50,
 			borderRadius: 25,
-			backgroundColor: colorScheme === "dark" ? "#151718" : "white",
+			backgroundColor: colorScheme === "dark" ? Palette.black : Palette.white,
 			justifyContent: "center",
 			alignItems: "center",
 			margin: 8,
 		},
 		row: {
 			flexDirection: "row",
-			backgroundColor: colorScheme === "dark" ? "#292d3e" : "lightgrey",
+			backgroundColor:
+				colorScheme === "dark" ? Palette.blueNavy : Palette.greyLight,
 			justifyContent: "space-between",
 			marginBottom: 16,
 			padding: 8,
 			borderRadius: 8,
 		},
 		rowPressed: {
-			backgroundColor: colorScheme === "dark" ? "#535664" : "#a8a8a8",
+			backgroundColor:
+				colorScheme === "dark" ? Palette.greyDark : Palette.greyLight2,
 		},
 		textType: {
 			flex: 1,
@@ -94,10 +97,10 @@ export function EntryList() {
 						{
 							backgroundColor:
 								selectedFilter === type
-									? "#2196f3"
+									? Palette.blue
 									: colorScheme === "dark"
-									? "#135a91"
-									: "#79c0f7",
+									? Palette.blueDark
+									: Palette.blueLight,
 						},
 					]}
 				>
@@ -155,7 +158,9 @@ export function EntryList() {
 											<FontAwesome
 												name={iconMap[e.type]}
 												size={24}
-												color={colorScheme === "dark" ? "white" : "black"}
+												color={
+													colorScheme === "dark" ? Palette.white : Palette.black
+												}
 											/>
 										</View>
 										<View style={styles.rightSection}>
