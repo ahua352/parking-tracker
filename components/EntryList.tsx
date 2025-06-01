@@ -67,6 +67,8 @@ export function EntryList() {
 			flexDirection: "row",
 			gap: 10,
 			marginBottom: 16,
+			alignItems: "center",
+			justifyContent: "space-between",
 		},
 		filterHeading: { marginBottom: 4 },
 		filterPressable: {
@@ -80,12 +82,19 @@ export function EntryList() {
 		filterText: {
 			fontWeight: "bold",
 		},
-		mapContainer: {
-			flex: 1,
+		dateFilterButton: {
+			paddingHorizontal: 16,
+			padding: 4,
+			borderRadius: 24,
+			alignItems: "center",
+			flexDirection: "row",
+			backgroundColor:
+				colorScheme === "dark" ? Palette.blueDark : Palette.blueLight,
+			gap: 6,
 		},
-		map: {
-			width: "100%",
-			height: 300,
+		dateFilterText: {
+			width: 98,
+			fontWeight: "bold",
 		},
 	});
 
@@ -161,19 +170,28 @@ export function EntryList() {
 					}}
 					style={styles.filterPressable}
 				>
-					<TextInput
-						value={
-							isStartDate
-								? startDate
-									? "Start: " + startDate.toLocaleDateString()
-									: "Start: DD/MM/YYYY"
-								: endDate
-								? "End: " + endDate.toLocaleDateString()
-								: "End: DD/MM/YYYY"
-						}
-						editable={false}
-						style={[styles.filterButton, { backgroundColor: Palette.blue }]}
-					/>
+					<View style={styles.dateFilterButton}>
+						<View>
+							<FontAwesome
+								name={"calendar"}
+								size={24}
+								color={colorScheme === "dark" ? Palette.white : Palette.black}
+							/>
+						</View>
+						<TextInput
+							value={
+								isStartDate
+									? startDate
+										? startDate.toLocaleDateString()
+										: "DD/MM/YYYY"
+									: endDate
+									? endDate.toLocaleDateString()
+									: "DD/MM/YYYY"
+							}
+							editable={false}
+							style={styles.dateFilterText}
+						/>
+					</View>
 				</Pressable>
 			</View>
 		);
@@ -197,8 +215,13 @@ export function EntryList() {
 							<FilterButton type={EntryType.WARDEN} />
 							<FilterButton type={EntryType.FINE} />
 						</View>
-						<View style={styles.filterContainer}>
+						<View style={[styles.filterContainer, { gap: 0 }]}>
 							<DateFilterButton isStartDate={true} />
+							<FontAwesome
+								name={"arrow-right"}
+								size={16}
+								color={colorScheme === "dark" ? Palette.white : Palette.black}
+							/>
 							<DateFilterButton isStartDate={false} />
 						</View>
 						<View style={{ marginBottom: 12 }}>
