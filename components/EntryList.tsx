@@ -19,13 +19,9 @@ export function EntryList() {
 	const { entries } = useEntryContext();
 	const router = useRouter();
 	const colorScheme = useColorScheme();
-	const initialStartDate = undefined;
-	const initialEndDate = undefined;
 	const [isEditStartDate, setIsEditStartDate] = useState(true);
-	const [startDate, setStartDate] = useState<Date | undefined>(
-		initialStartDate
-	);
-	const [endDate, setEndDate] = useState<Date | undefined>(initialEndDate);
+	const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+	const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 	const [showDatePicker, setShowDatePicker] = useState(false);
 
 	const styles = StyleSheet.create({
@@ -183,6 +179,11 @@ export function EntryList() {
 		);
 	};
 
+	const onClear = () => {
+		setStartDate(undefined);
+		setEndDate(undefined);
+	};
+
 	return (
 		<ScrollView>
 			<View>
@@ -199,6 +200,23 @@ export function EntryList() {
 						<View style={styles.filterContainer}>
 							<DateFilterButton isStartDate={true} />
 							<DateFilterButton isStartDate={false} />
+						</View>
+						<View style={{ marginBottom: 12 }}>
+							<Pressable
+								onPress={onClear}
+								style={{
+									backgroundColor: Palette.red,
+									borderRadius: 12,
+									paddingVertical: 12,
+									alignItems: "center",
+								}}
+							>
+								<ThemedText
+									style={{ color: Palette.white, fontWeight: "bold" }}
+								>
+									Clear Dates
+								</ThemedText>
+							</Pressable>
 						</View>
 						{showDatePicker && (
 							<DateTimePicker
