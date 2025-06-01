@@ -314,7 +314,7 @@ export function EntryList() {
 										<View style={styles.rightSection}>
 											<View style={styles.topTextContainer}>
 												<ThemedText type="subtitle" style={styles.textType}>
-													{e.type}
+													{e.name ? e.name : e.type}
 												</ThemedText>
 												<ThemedText style={styles.duration}>
 													{minutes === 0
