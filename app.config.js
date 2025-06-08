@@ -2,7 +2,7 @@ import "dotenv/config";
 
 export default {
 	expo: {
-		name: "parking-tracker",
+		name: "Parking Tracker",
 		slug: "parking-tracker",
 		version: "1.0.0",
 		orientation: "portrait",
@@ -14,6 +14,7 @@ export default {
 			supportsTablet: true,
 		},
 		android: {
+			package: "ahua352.parkingtracker",
 			adaptiveIcon: {
 				foregroundImage: "./assets/images/adaptive-icon.png",
 				backgroundColor: "#ffffff",
@@ -27,6 +28,9 @@ export default {
 		},
 		extra: {
 			googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
+			eas: {
+				projectId: "98f31805-d6f6-4559-89d3-d69e5c580d6d",
+			},
 		},
 		web: {
 			bundler: "metro",
