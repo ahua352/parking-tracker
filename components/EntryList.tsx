@@ -135,6 +135,10 @@ export function EntryList() {
 			alignItems: "center",
 			paddingHorizontal: 4,
 		},
+		entriesFoundContainer: {
+			marginVertical: 16,
+			alignItems: "center",
+		},
 	});
 
 	const [selectedFilter, setSelectedFilter] = useState<EntryType | null>(null);
@@ -274,158 +278,138 @@ export function EntryList() {
 
 	return (
 		<ScrollView>
-			<View>
-				{entries.length === 0 ? (
-					<ThemedText style={{ marginTop: 16 }}>No entries found.</ThemedText>
-				) : (
-					<>
-						<View style={{ marginBottom: 16 }}>
-							<View style={styles.inputContainer}>
-								<TextInput
-									onChangeText={setSearch}
-									value={search}
-									placeholder="Search entries..."
-									style={styles.input}
-									placeholderTextColor={Palette.grey}
-								/>
-								<Pressable
-									onPress={onPressClear}
-									style={({ pressed }: { pressed: boolean }) => [
-										styles.clearSearchButton,
-										pressed && styles.clearSearchButtonPressed,
-									]}
-								>
-									<FontAwesome
-										name={"close"}
-										size={20}
-										color={
-											colorScheme === "dark"
-												? Palette.greyLight3
-												: Palette.black
-										}
-									/>
-								</Pressable>
-							</View>
+			<View style={styles.inputContainer}>
+				<TextInput
+					onChangeText={setSearch}
+					value={search}
+					placeholder="Search entries..."
+					style={styles.input}
+					placeholderTextColor={Palette.grey}
+				/>
+				<Pressable
+					onPress={onPressClear}
+					style={({ pressed }: { pressed: boolean }) => [
+						styles.clearSearchButton,
+						pressed && styles.clearSearchButtonPressed,
+					]}
+				>
+					<FontAwesome
+						name={"close"}
+						size={20}
+						color={colorScheme === "dark" ? Palette.greyLight3 : Palette.black}
+					/>
+				</Pressable>
+			</View>
 
-							<View style={styles.filterContainer}>
-								<FilterButton type={EntryType.PARKING} />
-								<FilterButton type={EntryType.WARDEN} />
-								<FilterButton type={EntryType.FINE} />
-							</View>
-							<View style={[styles.filterContainer, { gap: 0 }]}>
-								<DateFilterButton isStartDate={true} />
+			<View style={styles.filterContainer}>
+				<FilterButton type={EntryType.PARKING} />
+				<FilterButton type={EntryType.WARDEN} />
+				<FilterButton type={EntryType.FINE} />
+			</View>
+			<View style={[styles.filterContainer, { gap: 0 }]}>
+				<DateFilterButton isStartDate={true} />
+				<FontAwesome
+					name={"arrow-right"}
+					size={16}
+					color={colorScheme === "dark" ? Palette.white : Palette.black}
+				/>
+				<DateFilterButton isStartDate={false} />
+			</View>
+			{showDatePicker && (
+				<DateTimePicker
+					value={
+						isEditStartDate ? startDate ?? new Date() : endDate ?? new Date()
+					}
+					mode="date"
+					onChange={onChangeDate}
+					minimumDate={isEditStartDate ? undefined : startDate}
+					maximumDate={
+						isEditStartDate ? (endDate ? endDate : new Date()) : new Date()
+					}
+				/>
+			)}
+
+			<View style={styles.entriesFoundContainer}>
+				<ThemedText type="subtitle">{entries.length} entries found</ThemedText>
+			</View>
+
+			{entries
+				.filter((e) => {
+					if (selectedFilter === null) {
+						return true;
+					} else {
+						return e.type === selectedFilter;
+					}
+				})
+				.filter((e) => {
+					if (startDate && endDate) {
+						return e.dateStart >= startDate && e.dateEnd <= endDate;
+					} else if (startDate) {
+						return e.dateStart >= startDate;
+					} else if (endDate) {
+						return e.dateEnd <= endDate;
+					}
+					return true;
+				})
+				.filter((e) => {
+					if (search.trim() === "") {
+						return true;
+					}
+					const searchLower = search.toLowerCase();
+					return (
+						e.name.toLowerCase().includes(searchLower) ||
+						e.location.toLowerCase().includes(searchLower)
+					);
+				})
+				.map((e, i) => {
+					// Duration in minutes
+					const duration = Math.round(
+						(e.dateEnd.getTime() - e.dateStart.getTime()) / (1000 * 60)
+					);
+					const hours = Math.floor(duration / 60);
+					const minutes = duration % 60;
+
+					return (
+						<Pressable
+							key={i}
+							style={({ pressed }: { pressed: boolean }) => [
+								styles.row,
+								pressed && styles.rowPressed,
+							]}
+							onPress={() => {
+								console.log(`Entry ${e.id} pressed`);
+								router.push({
+									pathname: "/editEntry",
+									params: { id: e.id.toString() },
+								});
+							}}
+						>
+							<View style={styles.iconCircle}>
 								<FontAwesome
-									name={"arrow-right"}
-									size={16}
+									name={iconMap[e.type]}
+									size={24}
 									color={colorScheme === "dark" ? Palette.white : Palette.black}
 								/>
-								<DateFilterButton isStartDate={false} />
 							</View>
-							{showDatePicker && (
-								<DateTimePicker
-									value={
-										isEditStartDate
-											? startDate ?? new Date()
-											: endDate ?? new Date()
-									}
-									mode="date"
-									onChange={onChangeDate}
-									minimumDate={isEditStartDate ? undefined : startDate}
-									maximumDate={
-										isEditStartDate
-											? endDate
-												? endDate
-												: new Date()
-											: new Date()
-									}
-								/>
-							)}
-						</View>
-
-						{entries
-							.filter((e) => {
-								if (selectedFilter === null) {
-									return true;
-								} else {
-									return e.type === selectedFilter;
-								}
-							})
-							.filter((e) => {
-								if (startDate && endDate) {
-									return e.dateStart >= startDate && e.dateEnd <= endDate;
-								} else if (startDate) {
-									return e.dateStart >= startDate;
-								} else if (endDate) {
-									return e.dateEnd <= endDate;
-								}
-								return true;
-							})
-							.filter((e) => {
-								if (search.trim() === "") {
-									return true;
-								}
-								const searchLower = search.toLowerCase();
-								return (
-									e.name.toLowerCase().includes(searchLower) ||
-									e.location.toLowerCase().includes(searchLower)
-								);
-							})
-							.map((e, i) => {
-								// Duration in minutes
-								const duration = Math.round(
-									(e.dateEnd.getTime() - e.dateStart.getTime()) / (1000 * 60)
-								);
-								const hours = Math.floor(duration / 60);
-								const minutes = duration % 60;
-
-								return (
-									<Pressable
-										key={i}
-										style={({ pressed }: { pressed: boolean }) => [
-											styles.row,
-											pressed && styles.rowPressed,
-										]}
-										onPress={() => {
-											console.log(`Entry ${e.id} pressed`);
-											router.push({
-												pathname: "/editEntry",
-												params: { id: e.id.toString() },
-											});
-										}}
-									>
-										<View style={styles.iconCircle}>
-											<FontAwesome
-												name={iconMap[e.type]}
-												size={24}
-												color={
-													colorScheme === "dark" ? Palette.white : Palette.black
-												}
-											/>
-										</View>
-										<View style={styles.rightSection}>
-											<View style={styles.topTextContainer}>
-												<ThemedText type="subtitle" style={styles.textType}>
-													{e.name ? e.name : e.type}
-												</ThemedText>
-												<ThemedText style={styles.duration}>
-													{minutes === 0
-														? `${hours} h`
-														: `${hours} h ${minutes} m`}
-												</ThemedText>
-											</View>
-											<View>
-												<ThemedText style={styles.dateStart}>
-													{e.dateStart.toLocaleString()}
-												</ThemedText>
-												<ThemedText>{e.location}</ThemedText>
-											</View>
-										</View>
-									</Pressable>
-								);
-							})}
-					</>
-				)}
-			</View>
+							<View style={styles.rightSection}>
+								<View style={styles.topTextContainer}>
+									<ThemedText type="subtitle" style={styles.textType}>
+										{e.name ? e.name : e.type}
+									</ThemedText>
+									<ThemedText style={styles.duration}>
+										{minutes === 0 ? `${hours} h` : `${hours} h ${minutes} m`}
+									</ThemedText>
+								</View>
+								<View>
+									<ThemedText style={styles.dateStart}>
+										{e.dateStart.toLocaleString()}
+									</ThemedText>
+									<ThemedText>{e.location}</ThemedText>
+								</View>
+							</View>
+						</Pressable>
+					);
+				})}
 		</ScrollView>
 	);
 }
