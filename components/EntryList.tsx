@@ -206,7 +206,21 @@ export function EntryList() {
 					}}
 					style={styles.filterPressable}
 				>
-					<View style={styles.dateFilterButton}>
+					<View
+						style={[
+							styles.dateFilterButton,
+							{
+								backgroundColor:
+									isStartDate && startDate
+										? Palette.blue
+										: !isStartDate && endDate
+										? Palette.blue
+										: colorScheme === "dark"
+										? Palette.blueDark
+										: Palette.blueLight,
+							},
+						]}
+					>
 						<View>
 							<FontAwesome
 								name={"calendar"}
