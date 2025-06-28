@@ -96,6 +96,7 @@ export function EntryList() {
 		dateFilterText: {
 			width: 98,
 			fontWeight: "bold",
+			color: colorScheme === "dark" ? Palette.white : Palette.black,
 		},
 		input: {
 			borderWidth: 1,
