@@ -23,6 +23,7 @@ export function EntryList() {
 	const [startDate, setStartDate] = useState<Date | undefined>(undefined);
 	const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 	const [showDatePicker, setShowDatePicker] = useState(false);
+	const [search, setSearch] = useState("");
 
 	const styles = StyleSheet.create({
 		iconCircle: {
@@ -95,6 +96,19 @@ export function EntryList() {
 		dateFilterText: {
 			width: 98,
 			fontWeight: "bold",
+		},
+		input: {
+			borderWidth: 1,
+			padding: 10,
+			paddingVertical: 14,
+			borderRadius: 8,
+			backgroundColor:
+				colorScheme === "dark" ? Palette.blueNavy : Palette.white,
+			borderColor: Palette.black,
+			color: colorScheme === "dark" ? Palette.greyLight3 : Palette.black,
+		},
+		inputContainer: {
+			marginBottom: 16,
 		},
 	});
 
@@ -210,6 +224,16 @@ export function EntryList() {
 				) : (
 					<>
 						<ThemedText style={styles.filterHeading}>Filter by:</ThemedText>
+						<View style={styles.inputContainer}>
+							<TextInput
+								onChangeText={setSearch}
+								value={search}
+								placeholder="Search entries..."
+								style={styles.input}
+								placeholderTextColor={Palette.grey}
+							/>
+						</View>
+
 						<View style={styles.filterContainer}>
 							<FilterButton type={EntryType.PARKING} />
 							<FilterButton type={EntryType.WARDEN} />
@@ -278,6 +302,16 @@ export function EntryList() {
 									return e.dateEnd <= endDate;
 								}
 								return true;
+							})
+							.filter((e) => {
+								if (search.trim() === "") {
+									return true;
+								}
+								const searchLower = search.toLowerCase();
+								return (
+									e.name.toLowerCase().includes(searchLower) ||
+									e.location.toLowerCase().includes(searchLower)
+								);
 							})
 							.map((e, i) => {
 								// Duration in minutes
