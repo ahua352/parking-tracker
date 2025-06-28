@@ -122,15 +122,19 @@ export function EntryList() {
 				colorScheme === "dark" ? Palette.blueNavy : Palette.white,
 			borderColor: Palette.black,
 		},
-		searchButton: {
+		clearSearchButton: {
 			alignItems: "center",
 			padding: 8,
 			paddingHorizontal: 12,
 		},
-		searchButtonPressed: {
+		clearSearchButtonPressed: {
 			backgroundColor:
 				colorScheme === "dark" ? Palette.greyDark : Palette.greyLight2,
 			borderRadius: 8,
+		},
+		clearDateButton: {
+			alignItems: "center",
+			paddingHorizontal: 4,
 		},
 	});
 
@@ -221,13 +225,14 @@ export function EntryList() {
 							},
 						]}
 					>
-						<View>
-							<FontAwesome
-								name={"calendar"}
-								size={24}
-								color={colorScheme === "dark" ? Palette.white : Palette.black}
-							/>
-						</View>
+						{/* Not enough space to show calendar icon */}
+						{/* <View>
+								<FontAwesome
+									name={"calendar"}
+									size={24}
+									color={colorScheme === "dark" ? Palette.white : Palette.black}
+								/>
+							</View> */}
 						<TextInput
 							value={
 								isStartDate
@@ -241,15 +246,27 @@ export function EntryList() {
 							editable={false}
 							style={styles.dateFilterText}
 						/>
+						<Pressable
+							onPress={() =>
+								isStartDate ? setStartDate(undefined) : setEndDate(undefined)
+							}
+							style={({ pressed }: { pressed: boolean }) => [
+								styles.clearDateButton,
+								pressed && styles.clearSearchButtonPressed,
+							]}
+						>
+							<View>
+								<FontAwesome
+									name={"close"}
+									size={20}
+									color={colorScheme === "dark" ? Palette.white : Palette.black}
+								/>
+							</View>
+						</Pressable>
 					</View>
 				</Pressable>
 			</View>
 		);
-	};
-
-	const onClear = () => {
-		setStartDate(undefined);
-		setEndDate(undefined);
 	};
 
 	const onPressClear = () => {
@@ -275,8 +292,8 @@ export function EntryList() {
 							<Pressable
 								onPress={onPressClear}
 								style={({ pressed }: { pressed: boolean }) => [
-									styles.searchButton,
-									pressed && styles.searchButtonPressed,
+									styles.clearSearchButton,
+									pressed && styles.clearSearchButtonPressed,
 								]}
 							>
 								<FontAwesome
@@ -302,23 +319,6 @@ export function EntryList() {
 								color={colorScheme === "dark" ? Palette.white : Palette.black}
 							/>
 							<DateFilterButton isStartDate={false} />
-						</View>
-						<View style={{ marginBottom: 12 }}>
-							<Pressable
-								onPress={onClear}
-								style={{
-									backgroundColor: Palette.red,
-									borderRadius: 12,
-									paddingVertical: 12,
-									alignItems: "center",
-								}}
-							>
-								<ThemedText
-									style={{ color: Palette.white, fontWeight: "bold" }}
-								>
-									Clear Dates
-								</ThemedText>
-							</Pressable>
 						</View>
 						{showDatePicker && (
 							<DateTimePicker
