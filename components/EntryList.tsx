@@ -276,6 +276,18 @@ export function EntryList() {
 		setSearch("");
 	};
 
+	const getDurationString = (hours: number, minutes: number) => {
+		if (hours === 0 && minutes === 0) {
+			return "";
+		} else if (hours === 0) {
+			return `${minutes} m`;
+		} else if (minutes === 0) {
+			return `${hours} h`;
+		} else {
+			return `${hours} h ${minutes} m`;
+		}
+	};
+
 	return (
 		<ScrollView>
 			<View style={styles.inputContainer}>
@@ -368,6 +380,7 @@ export function EntryList() {
 					);
 					const hours = Math.floor(duration / 60);
 					const minutes = duration % 60;
+					const durationString = getDurationString(hours, minutes);
 
 					return (
 						<Pressable
@@ -397,7 +410,7 @@ export function EntryList() {
 										{e.name ? e.name : e.type}
 									</ThemedText>
 									<ThemedText style={styles.duration}>
-										{minutes === 0 ? `${hours} h` : `${hours} h ${minutes} m`}
+										{durationString}
 									</ThemedText>
 								</View>
 								<View>
