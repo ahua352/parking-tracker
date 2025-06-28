@@ -231,7 +231,7 @@ export function MapDisplay({
 			top: -6,
 			left: 0,
 			right: 0,
-			borderColor: Palette.black,
+			borderColor: suggestions.length > 0 ? Palette.black : "transparent",
 			borderWidth: 1,
 		},
 		searchResultItem: {

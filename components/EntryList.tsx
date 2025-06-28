@@ -99,17 +99,38 @@ export function EntryList() {
 			color: colorScheme === "dark" ? Palette.white : Palette.black,
 		},
 		input: {
-			borderWidth: 1,
+			// borderWidth: 1,
 			padding: 10,
-			paddingVertical: 14,
+			// paddingVertical: 14,
+			borderRadius: 8,
+			backgroundColor:
+				colorScheme === "dark" ? Palette.blueNavy : Palette.white,
+			// borderColor: Palette.black,
+			color: colorScheme === "dark" ? Palette.greyLight3 : Palette.black,
+			flex: 1,
+		},
+		inputContainer: {
+			marginBottom: 16,
+			// height: 52,
+			flexDirection: "row",
+			alignItems: "center",
+			borderWidth: 1,
+			padding: 6,
+			paddingVertical: 4,
 			borderRadius: 8,
 			backgroundColor:
 				colorScheme === "dark" ? Palette.blueNavy : Palette.white,
 			borderColor: Palette.black,
-			color: colorScheme === "dark" ? Palette.greyLight3 : Palette.black,
 		},
-		inputContainer: {
-			marginBottom: 16,
+		searchButton: {
+			alignItems: "center",
+			padding: 8,
+			paddingHorizontal: 12,
+		},
+		searchButtonPressed: {
+			backgroundColor:
+				colorScheme === "dark" ? Palette.greyDark : Palette.greyLight2,
+			borderRadius: 8,
 		},
 	});
 
@@ -217,6 +238,10 @@ export function EntryList() {
 		setEndDate(undefined);
 	};
 
+	const onPressClear = () => {
+		setSearch("");
+	};
+
 	return (
 		<ScrollView>
 			<View>
@@ -233,6 +258,21 @@ export function EntryList() {
 								style={styles.input}
 								placeholderTextColor={Palette.grey}
 							/>
+							<Pressable
+								onPress={onPressClear}
+								style={({ pressed }: { pressed: boolean }) => [
+									styles.searchButton,
+									pressed && styles.searchButtonPressed,
+								]}
+							>
+								<FontAwesome
+									name={"close"}
+									size={20}
+									color={
+										colorScheme === "dark" ? Palette.greyLight3 : Palette.black
+									}
+								/>
+							</Pressable>
 						</View>
 
 						<View style={styles.filterContainer}>
