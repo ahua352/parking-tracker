@@ -6,7 +6,7 @@ import {
 	useColorScheme,
 	View,
 } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { ThemedText } from "./ThemedText";
 import Constants from "expo-constants";
 import * as Location from "expo-location";
@@ -323,6 +323,7 @@ export function MapDisplay({
 							  }
 							: undefined
 					}
+					provider={PROVIDER_GOOGLE}
 				>
 					{coordinates && <Marker coordinate={coordinates} />}
 				</MapView>
