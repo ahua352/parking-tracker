@@ -71,7 +71,6 @@ export function EntryList() {
 			alignItems: "center",
 			justifyContent: "space-between",
 		},
-		filterHeading: { marginBottom: 4 },
 		filterPressable: {
 			flex: 1,
 		},
@@ -280,65 +279,68 @@ export function EntryList() {
 					<ThemedText style={{ marginTop: 16 }}>No entries found.</ThemedText>
 				) : (
 					<>
-						<ThemedText style={styles.filterHeading}>Filter by:</ThemedText>
-						<View style={styles.inputContainer}>
-							<TextInput
-								onChangeText={setSearch}
-								value={search}
-								placeholder="Search entries..."
-								style={styles.input}
-								placeholderTextColor={Palette.grey}
-							/>
-							<Pressable
-								onPress={onPressClear}
-								style={({ pressed }: { pressed: boolean }) => [
-									styles.clearSearchButton,
-									pressed && styles.clearSearchButtonPressed,
-								]}
-							>
+						<View style={{ marginBottom: 16 }}>
+							<View style={styles.inputContainer}>
+								<TextInput
+									onChangeText={setSearch}
+									value={search}
+									placeholder="Search entries..."
+									style={styles.input}
+									placeholderTextColor={Palette.grey}
+								/>
+								<Pressable
+									onPress={onPressClear}
+									style={({ pressed }: { pressed: boolean }) => [
+										styles.clearSearchButton,
+										pressed && styles.clearSearchButtonPressed,
+									]}
+								>
+									<FontAwesome
+										name={"close"}
+										size={20}
+										color={
+											colorScheme === "dark"
+												? Palette.greyLight3
+												: Palette.black
+										}
+									/>
+								</Pressable>
+							</View>
+
+							<View style={styles.filterContainer}>
+								<FilterButton type={EntryType.PARKING} />
+								<FilterButton type={EntryType.WARDEN} />
+								<FilterButton type={EntryType.FINE} />
+							</View>
+							<View style={[styles.filterContainer, { gap: 0 }]}>
+								<DateFilterButton isStartDate={true} />
 								<FontAwesome
-									name={"close"}
-									size={20}
-									color={
-										colorScheme === "dark" ? Palette.greyLight3 : Palette.black
+									name={"arrow-right"}
+									size={16}
+									color={colorScheme === "dark" ? Palette.white : Palette.black}
+								/>
+								<DateFilterButton isStartDate={false} />
+							</View>
+							{showDatePicker && (
+								<DateTimePicker
+									value={
+										isEditStartDate
+											? startDate ?? new Date()
+											: endDate ?? new Date()
+									}
+									mode="date"
+									onChange={onChangeDate}
+									minimumDate={isEditStartDate ? undefined : startDate}
+									maximumDate={
+										isEditStartDate
+											? endDate
+												? endDate
+												: new Date()
+											: new Date()
 									}
 								/>
-							</Pressable>
+							)}
 						</View>
-
-						<View style={styles.filterContainer}>
-							<FilterButton type={EntryType.PARKING} />
-							<FilterButton type={EntryType.WARDEN} />
-							<FilterButton type={EntryType.FINE} />
-						</View>
-						<View style={[styles.filterContainer, { gap: 0 }]}>
-							<DateFilterButton isStartDate={true} />
-							<FontAwesome
-								name={"arrow-right"}
-								size={16}
-								color={colorScheme === "dark" ? Palette.white : Palette.black}
-							/>
-							<DateFilterButton isStartDate={false} />
-						</View>
-						{showDatePicker && (
-							<DateTimePicker
-								value={
-									isEditStartDate
-										? startDate ?? new Date()
-										: endDate ?? new Date()
-								}
-								mode="date"
-								onChange={onChangeDate}
-								minimumDate={isEditStartDate ? undefined : startDate}
-								maximumDate={
-									isEditStartDate
-										? endDate
-											? endDate
-											: new Date()
-										: new Date()
-								}
-							/>
-						)}
 
 						{entries
 							.filter((e) => {
