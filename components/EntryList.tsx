@@ -84,7 +84,7 @@ export function EntryList() {
 		},
 		dateFilterButton: {
 			paddingHorizontal: 16,
-			padding: 4,
+			paddingVertical: 12,
 			borderRadius: 24,
 			alignItems: "center",
 			flexDirection: "row",
