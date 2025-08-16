@@ -10,6 +10,12 @@ export default {
 		scheme: "myapp",
 		userInterfaceStyle: "automatic",
 		newArchEnabled: true,
+		updates: {
+			url: "https://u.expo.dev/98f31805-d6f6-4559-89d3-d69e5c580d6d",
+		},
+		runtimeVersion: {
+			policy: "appVersion",
+		},
 		ios: {
 			supportsTablet: true,
 		},
