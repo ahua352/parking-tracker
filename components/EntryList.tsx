@@ -25,6 +25,7 @@ export function EntryList() {
 	const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [search, setSearch] = useState("");
+	const [showCompressed, setShowCompressed] = useState(false);
 
 	const styles = StyleSheet.create({
 		iconCircle: {
@@ -143,7 +144,18 @@ export function EntryList() {
 		titleContainer: {
 			flexDirection: "row",
 			alignItems: "center",
-			marginBottom: 8,
+			marginBottom: 12,
+		},
+		toggleSizeContainer: {
+			marginLeft: "auto",
+		},
+		toggleSizeButton: {
+			alignItems: "center",
+			padding: 12,
+			borderRadius: 24,
+			aspectRatio: 1,
+			backgroundColor:
+				colorScheme === "dark" ? Palette.blueNavy : Palette.white,
 		},
 	});
 
@@ -294,10 +306,28 @@ export function EntryList() {
 		}
 	};
 
+	const onPressToggleSize = () => {
+		setShowCompressed(!showCompressed);
+	};
+
 	return (
 		<ScrollView>
 			<ThemedView style={styles.titleContainer}>
 				<ThemedText type="title">Entry List</ThemedText>
+				<View style={styles.toggleSizeContainer}>
+					<Pressable
+						onPress={onPressToggleSize}
+						style={styles.toggleSizeButton}
+					>
+						<FontAwesome
+							name={showCompressed ? "expand" : "compress"}
+							size={24}
+							color={
+								colorScheme === "dark" ? Palette.greyLight3 : Palette.black
+							}
+						/>
+					</Pressable>
+				</View>
 			</ThemedView>
 			<View style={styles.inputContainer}>
 				<TextInput
