@@ -14,6 +14,7 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Palette } from "@/constants/Colors";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { ThemedView } from "./ThemedView";
 
 export function EntryList() {
 	const { entries } = useEntryContext();
@@ -138,6 +139,11 @@ export function EntryList() {
 		entriesFoundContainer: {
 			marginVertical: 16,
 			alignItems: "center",
+		},
+		titleContainer: {
+			flexDirection: "row",
+			alignItems: "center",
+			marginBottom: 8,
 		},
 	});
 
@@ -290,6 +296,9 @@ export function EntryList() {
 
 	return (
 		<ScrollView>
+			<ThemedView style={styles.titleContainer}>
+				<ThemedText type="title">Entry List</ThemedText>
+			</ThemedView>
 			<View style={styles.inputContainer}>
 				<TextInput
 					onChangeText={setSearch}

@@ -21,20 +21,12 @@ export default function HomeScreen() {
 				/>
 			}
 		>
-			<ThemedView style={styles.titleContainer}>
-				<ThemedText type="title">Entry List</ThemedText>
-			</ThemedView>
 			<EntryList />
 		</ParallaxScrollView>
 	);
 }
 
 const styles = StyleSheet.create({
-	titleContainer: {
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 8,
-	},
 	headerImage: {
 		width: "100%",
 		height: "100%",
