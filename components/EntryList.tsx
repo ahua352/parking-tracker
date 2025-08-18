@@ -29,12 +29,13 @@ export function EntryList() {
 
 	const styles = StyleSheet.create({
 		iconCircle: {
-			width: 50,
-			height: 50,
+			width: showCompressed ? 30 : 50,
+			height: showCompressed ? 30 : 50,
 			borderRadius: 25,
 			backgroundColor: colorScheme === "dark" ? Palette.black : Palette.white,
 			justifyContent: "center",
 			alignItems: "center",
+			marginLeft: 4,
 			margin: 8,
 		},
 		row: {
@@ -157,6 +158,7 @@ export function EntryList() {
 			backgroundColor:
 				colorScheme === "dark" ? Palette.blueNavy : Palette.white,
 		},
+		locationTextCompressed: { fontSize: 14, marginTop: 2 },
 	});
 
 	const [selectedFilter, setSelectedFilter] = useState<EntryType | null>(null);
@@ -439,24 +441,41 @@ export function EntryList() {
 							<View style={styles.iconCircle}>
 								<FontAwesome
 									name={iconMap[e.type]}
-									size={24}
+									size={14}
 									color={colorScheme === "dark" ? Palette.white : Palette.black}
 								/>
 							</View>
 							<View style={styles.rightSection}>
 								<View style={styles.topTextContainer}>
-									<ThemedText type="subtitle" style={styles.textType}>
-										{e.name ? e.name : e.type}
-									</ThemedText>
+									{showCompressed ? (
+										<ThemedText
+											style={[styles.textType, { fontWeight: "bold" }]}
+										>
+											{e.dateStart.toLocaleString()}
+										</ThemedText>
+									) : (
+										<ThemedText type="subtitle" style={styles.textType}>
+											{e.name ? e.name : e.type}
+										</ThemedText>
+									)}
 									<ThemedText style={styles.duration}>
 										{durationString}
 									</ThemedText>
 								</View>
 								<View>
-									<ThemedText style={styles.dateStart}>
-										{e.dateStart.toLocaleString()}
+									{!showCompressed && (
+										<ThemedText style={styles.dateStart}>
+											{e.dateStart.toLocaleString()}
+										</ThemedText>
+									)}
+									<ThemedText
+										style={
+											showCompressed ? styles.locationTextCompressed : undefined
+										}
+										numberOfLines={showCompressed ? 1 : undefined}
+									>
+										{e.location}
 									</ThemedText>
-									<ThemedText>{e.location}</ThemedText>
 								</View>
 							</View>
 						</Pressable>
