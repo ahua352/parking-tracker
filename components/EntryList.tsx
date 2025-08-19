@@ -441,7 +441,7 @@ export function EntryList() {
 							<View style={styles.iconCircle}>
 								<FontAwesome
 									name={iconMap[e.type]}
-									size={14}
+									size={showCompressed ? 14 : 24}
 									color={colorScheme === "dark" ? Palette.white : Palette.black}
 								/>
 							</View>
