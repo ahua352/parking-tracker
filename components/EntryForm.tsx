@@ -41,6 +41,20 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 		container: { marginTop: 16, flexDirection: "column", gap: 16 },
 		field: { flexDirection: "column", gap: 6 },
 		fieldTitle: { fontWeight: "bold" },
+		copyDateButtonContainer: {
+			flexDirection: "row",
+			justifyContent: "space-between",
+		},
+		copyDateButton: {
+			alignItems: "center",
+			paddingHorizontal: 4,
+			padding: 4,
+		},
+		copyDateButtonPressed: {
+			backgroundColor:
+				colorScheme === "dark" ? Palette.greyDark : Palette.greyLight2,
+			borderRadius: 8,
+		},
 	});
 
 	const [isMapModalVisible, setIsMapModalVisible] = useState(false);
@@ -252,7 +266,26 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 					</Pressable>
 				</View>
 				<View style={styles.field}>
-					<ThemedText style={styles.fieldTitle}>End date*</ThemedText>
+					<View style={styles.copyDateButtonContainer}>
+						<ThemedText style={styles.fieldTitle}>End date*</ThemedText>
+						<Pressable
+							onPress={() => {
+								setEndDate(startDate);
+							}}
+							style={({ pressed }: { pressed: boolean }) => [
+								styles.copyDateButton,
+								pressed && styles.copyDateButtonPressed,
+							]}
+						>
+							<View>
+								<FontAwesome
+									name={"arrow-down"}
+									size={20}
+									color={colorScheme === "dark" ? Palette.white : Palette.black}
+								/>
+							</View>
+						</Pressable>
+					</View>
 					<Pressable
 						onPress={() => {
 							setIsEditStartDate(false);
