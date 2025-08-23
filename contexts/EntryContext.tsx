@@ -68,7 +68,9 @@ export const EntryContextProvider = ({ children }: { children: ReactNode }) => {
 	const fetchEntries = async () => {
 		try {
 			const result = await database.getAllAsync("SELECT * FROM entries");
-			const fetchedEntries = mapEntries(result);
+			const fetchedEntries = mapEntries(result).sort(
+				(a, b) => b.dateStart.getTime() - a.dateStart.getTime()
+			);
 			setEntries(fetchedEntries);
 			console.log("Fetched entries:", fetchedEntries);
 		} catch (error) {
