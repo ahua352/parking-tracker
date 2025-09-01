@@ -1,4 +1,4 @@
-# Parking Tracker App 👋
+# Parking Tracker App 🚗
 
 This is an expo app which allows you to keep track of parking-related data.
 
