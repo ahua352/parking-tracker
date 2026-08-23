@@ -21,3 +21,8 @@ export interface Entry {
 	notes: string;
 	coordinates: { latitude: number; longitude: number } | null;
 }
+
+export type DropdownItem = {
+	label: string;
+	value: string;
+};

@@ -13,6 +13,7 @@ interface EntryContextType {
 	addEntry: (entry: Entry) => void;
 	updateEntry: (entry: Entry) => void;
 	deleteEntry: (id: number) => void;
+	locations: string[];
 }
 
 const EntryContext = createContext<EntryContextType | undefined>(undefined);
@@ -36,12 +37,13 @@ const mapEntries = (result: any[]): Entry[] => {
 export const EntryContextProvider = ({ children }: { children: ReactNode }) => {
 	const database = useSQLiteContext();
 	const [entries, setEntries] = useState<Entry[]>([]);
+	const [locations, setLocations] = useState<string[]>([]);
 
 	const fetchEntries = async () => {
 		try {
 			const result = await database.getAllAsync("SELECT * FROM entries");
 			const fetchedEntries = mapEntries(result).sort(
-				(a, b) => b.dateStart.getTime() - a.dateStart.getTime()
+				(a, b) => b.dateStart.getTime() - a.dateStart.getTime(),
 			);
 			setEntries(fetchedEntries);
 			console.log("Fetched entries:", fetchedEntries);
@@ -53,6 +55,21 @@ export const EntryContextProvider = ({ children }: { children: ReactNode }) => {
 	useEffect(() => {
 		fetchEntries();
 	}, []);
+
+	const getWordKey = (str: string) => {
+		const match = str.match(/[a-zA-Z]+/);
+		return match ? match[0].toLowerCase() : str.toLowerCase();
+	};
+
+	useEffect(() => {
+		const uniqueLocations = [
+			...new Set(entries.map((entry) => entry.location)),
+		];
+
+		uniqueLocations.sort((a, b) => getWordKey(a).localeCompare(getWordKey(b)));
+
+		setLocations(uniqueLocations);
+	}, [entries]);
 
 	const addEntry = async (entry: Entry) => {
 		try {
@@ -68,7 +85,7 @@ export const EntryContextProvider = ({ children }: { children: ReactNode }) => {
 					entry.notes,
 					entry.coordinates?.latitude ?? null,
 					entry.coordinates?.longitude ?? null,
-				]
+				],
 			);
 			console.log("Entry added to database:", entry);
 
@@ -93,7 +110,7 @@ export const EntryContextProvider = ({ children }: { children: ReactNode }) => {
 					updatedEntry.coordinates?.latitude ?? null,
 					updatedEntry.coordinates?.longitude ?? null,
 					updatedEntry.id,
-				]
+				],
 			);
 			console.log("Entry updated in database:", updatedEntry);
 
@@ -116,7 +133,13 @@ export const EntryContextProvider = ({ children }: { children: ReactNode }) => {
 
 	return (
 		<EntryContext.Provider
-			value={{ entries, addEntry, updateEntry, deleteEntry }}
+			value={{
+				entries,
+				addEntry,
+				updateEntry,
+				deleteEntry,
+				locations,
+			}}
 		>
 			{children}
 		</EntryContext.Provider>

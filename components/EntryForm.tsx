@@ -15,7 +15,12 @@ import React, { useCallback, useEffect, useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { FontAwesome } from "@expo/vector-icons";
-import { Entry, EntryType, iconMap } from "@/constants/EntryConstants";
+import {
+	DropdownItem,
+	Entry,
+	EntryType,
+	iconMap,
+} from "@/constants/EntryConstants";
 import { useEntryContext } from "@/contexts/EntryContext";
 import { useFocusEffect, useRouter } from "expo-router";
 import { MapDisplay } from "./MapDisplay";
@@ -24,7 +29,7 @@ import { Palette } from "@/constants/Colors";
 
 export function EntryForm({ entry }: { entry?: Entry }) {
 	const router = useRouter();
-	const { addEntry, updateEntry, deleteEntry } = useEntryContext();
+	const { addEntry, updateEntry, deleteEntry, locations } = useEntryContext();
 
 	const colorScheme = Appearance.getColorScheme();
 	const styles = StyleSheet.create({
@@ -64,6 +69,10 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 	const [notes, setNotes] = useState(entry ? entry.notes : "");
 	const [location, setLocation] = useState(entry ? entry.location : "");
 	const [locationError, setLocationError] = useState(false);
+	const [dropdownLocationOpen, setDropdownLocationOpen] = useState(false);
+	const [dropdownLocationItems, setDropdownLocationItems] = useState<
+		DropdownItem[]
+	>([]);
 
 	const [dropdownError, setDropdownError] = useState(false);
 	const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -81,12 +90,12 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 					/>
 				</View>
 			),
-		}))
+		})),
 	);
 
 	const [isEditStartDate, setIsEditStartDate] = useState(true);
 	const [startDate, setStartDate] = useState(
-		entry ? entry.dateStart : new Date()
+		entry ? entry.dateStart : new Date(),
 	);
 	const [endDate, setEndDate] = useState(entry ? entry.dateEnd : new Date());
 	const [showDatePicker, setShowDatePicker] = useState(false);
@@ -186,7 +195,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 						},
 					},
 				],
-				{ cancelable: true }
+				{ cancelable: true },
 			);
 		}
 	};
@@ -204,6 +213,15 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 		console.log("Coordinates:", coordinates);
 	}, [location, coordinates]);
 
+	useEffect(() => {
+		setDropdownLocationItems(
+			locations.map((location) => ({
+				label: location,
+				value: location,
+			})),
+		);
+	}, [locations]);
+
 	// Reset fields when component is focused
 	useFocusEffect(
 		useCallback(() => {
@@ -214,7 +232,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 			setEndDate(entry ? new Date(entry.dateEnd) : new Date());
 			setDropdownValue(entry ? entry.type : null);
 			setCoordinates(entry ? entry.coordinates : null);
-		}, [entry])
+		}, [entry]),
 	);
 
 	return (
@@ -318,18 +336,34 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 					/>
 				)}
 				<View style={styles.field}>
-					<ThemedText style={styles.fieldTitle}>Location*</ThemedText>
-					<Pressable onPress={onOpenMap}>
-						<ThemedText
-							style={[
-								styles.input,
-								{ fontSize: 14 },
-								!location && { color: Palette.grey },
-							]}
-						>
-							{location ? location : "Select location"}
-						</ThemedText>
-					</Pressable>
+					<View style={styles.copyDateButtonContainer}>
+						<ThemedText style={styles.fieldTitle}>Location*</ThemedText>
+						<Pressable onPress={onOpenMap}>
+							<View>
+								<FontAwesome
+									name={"map"}
+									size={20}
+									color={colorScheme === "dark" ? Palette.white : Palette.black}
+								/>
+							</View>
+						</Pressable>
+					</View>
+					<DropDownPicker
+						open={dropdownLocationOpen}
+						value={location}
+						items={dropdownLocationItems}
+						setOpen={setDropdownLocationOpen}
+						setValue={setLocation}
+						setItems={setDropdownLocationItems}
+						placeholder="Select an option"
+						theme={colorScheme === "dark" ? "DARK" : "LIGHT"}
+						style={{ borderColor: dropdownError ? Palette.red : Palette.black }}
+						placeholderStyle={{
+							color: Palette.grey,
+						}}
+						searchable={true}
+						searchPlaceholder="Search..."
+					/>
 				</View>
 				<View style={styles.field}>
 					<ThemedText style={styles.fieldTitle}>Notes</ThemedText>
@@ -424,6 +458,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 						setLocation={setLocation}
 						coordinates={coordinates}
 						setCoordinates={setCoordinates}
+						setDropdownLocationItems={setDropdownLocationItems}
 					/>
 				</View>
 			</Modal>

@@ -12,16 +12,19 @@ import Constants from "expo-constants";
 import * as Location from "expo-location";
 import { useEffect, useRef, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
-import dummySuggestions from "../data/suggestions.json";
 import { Coordinate, Suggestion } from "@/constants/MapConstants";
 import { v4 as uuidv4 } from "uuid";
 import { Palette } from "@/constants/Colors";
+import { DropdownItem } from "@/constants/EntryConstants";
 
 type MapDisplayProps = {
 	location: string;
 	setLocation: (location: string) => void;
 	coordinates: Coordinate | null;
 	setCoordinates: (coordinates: Coordinate) => void;
+	setDropdownLocationItems: React.Dispatch<
+		React.SetStateAction<DropdownItem[]>
+	>;
 };
 
 export function MapDisplay({
@@ -29,6 +32,7 @@ export function MapDisplay({
 	setLocation,
 	coordinates,
 	setCoordinates,
+	setDropdownLocationItems,
 }: MapDisplayProps) {
 	const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
 	const colorScheme = useColorScheme();
@@ -39,7 +43,7 @@ export function MapDisplay({
 	// Fetch autocomplete suggestions from Google Places API
 	const fetchAutocomplete = async (
 		input: string,
-		location?: { lat: number; lng: number }
+		location?: { lat: number; lng: number },
 	) => {
 		const apiKey = Constants.expoConfig?.extra?.googleMapsApiKey;
 		const url = "https://places.googleapis.com/v1/places:autocomplete";
@@ -76,8 +80,6 @@ export function MapDisplay({
 
 	const onPressSearch = async () => {
 		console.log("Search button pressed");
-
-		// setSuggestions(dummySuggestions);
 
 		if (userLocation) {
 			fetchAutocomplete(location, {
@@ -117,9 +119,18 @@ export function MapDisplay({
 
 	const onPressItem = (item: Suggestion) => {
 		console.log("Item pressed:", item);
+		const newLocation = item.placePrediction.text.text;
 
-		setLocation(item.placePrediction.text.text);
+		setLocation(newLocation);
 		setSuggestions([]);
+
+		setDropdownLocationItems((items) => [
+			...items,
+			{
+				label: newLocation,
+				value: newLocation,
+			},
+		]);
 
 		fetchPlaceDetails(item).then((details) => {
 			if (details.location) {
@@ -314,14 +325,14 @@ export function MapDisplay({
 									...coordinates,
 									latitudeDelta: 0.01,
 									longitudeDelta: 0.01,
-							  }
+								}
 							: userLocation
-							? {
-									...userLocation,
-									latitudeDelta: 0.01,
-									longitudeDelta: 0.01,
-							  }
-							: undefined
+								? {
+										...userLocation,
+										latitudeDelta: 0.01,
+										longitudeDelta: 0.01,
+									}
+								: undefined
 					}
 					provider={PROVIDER_GOOGLE}
 				>
