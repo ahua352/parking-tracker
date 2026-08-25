@@ -177,8 +177,8 @@ export function EntryList() {
 								selectedFilter === type
 									? Palette.blue
 									: colorScheme === "dark"
-									? Palette.blueDark
-									: Palette.blueLight,
+										? Palette.blueDark
+										: Palette.blueLight,
 						},
 					]}
 				>
@@ -199,7 +199,7 @@ export function EntryList() {
 					0,
 					0,
 					0,
-					0
+					0,
 				);
 
 				setStartDate(correctedStartDate);
@@ -211,7 +211,7 @@ export function EntryList() {
 					23,
 					59,
 					59,
-					999
+					999,
 				);
 
 				setEndDate(correctedEndDate);
@@ -241,10 +241,10 @@ export function EntryList() {
 									isStartDate && startDate
 										? Palette.blue
 										: !isStartDate && endDate
-										? Palette.blue
-										: colorScheme === "dark"
-										? Palette.blueDark
-										: Palette.blueLight,
+											? Palette.blue
+											: colorScheme === "dark"
+												? Palette.blueDark
+												: Palette.blueLight,
 							},
 						]}
 					>
@@ -263,8 +263,8 @@ export function EntryList() {
 										? startDate.toLocaleDateString()
 										: "DD/MM/YYYY"
 									: endDate
-									? endDate.toLocaleDateString()
-									: "DD/MM/YYYY"
+										? endDate.toLocaleDateString()
+										: "DD/MM/YYYY"
 							}
 							editable={false}
 							style={styles.dateFilterText}
@@ -312,6 +312,37 @@ export function EntryList() {
 		setShowCompressed(!showCompressed);
 	};
 
+	const filteredEntries = entries
+		.filter((e) => {
+			if (selectedFilter === null) {
+				return true;
+			} else {
+				return e.type === selectedFilter;
+			}
+		})
+		.filter((e) => {
+			if (startDate && endDate) {
+				return e.dateStart >= startDate && e.dateEnd <= endDate;
+			} else if (startDate) {
+				return e.dateStart >= startDate;
+			} else if (endDate) {
+				return e.dateEnd <= endDate;
+			}
+			return true;
+		})
+		.filter((e) => {
+			if (search.trim() === "") {
+				return true;
+			}
+			const searchLower = search.toLowerCase();
+			return (
+				e.name.toLowerCase().includes(searchLower) ||
+				e.location.toLowerCase().includes(searchLower)
+			);
+		});
+
+	const entriesCount = filteredEntries.length;
+
 	return (
 		<ScrollView>
 			<ThemedView style={styles.titleContainer}>
@@ -353,7 +384,6 @@ export function EntryList() {
 					/>
 				</Pressable>
 			</View>
-
 			<View style={styles.filterContainer}>
 				<FilterButton type={EntryType.PARKING} />
 				<FilterButton type={EntryType.WARDEN} />
@@ -371,7 +401,9 @@ export function EntryList() {
 			{showDatePicker && (
 				<DateTimePicker
 					value={
-						isEditStartDate ? startDate ?? new Date() : endDate ?? new Date()
+						isEditStartDate
+							? (startDate ?? new Date())
+							: (endDate ?? new Date())
 					}
 					mode="date"
 					onChange={onChangeDate}
@@ -381,106 +413,74 @@ export function EntryList() {
 					}
 				/>
 			)}
-
 			<View style={styles.entriesFoundContainer}>
-				<ThemedText type="subtitle">{entries.length} entries found</ThemedText>
+				<ThemedText type="subtitle">{entriesCount} entries found</ThemedText>
 			</View>
+			{filteredEntries.map((e, i, a) => {
+				// Duration in minutes
+				const duration = Math.round(
+					(e.dateEnd.getTime() - e.dateStart.getTime()) / (1000 * 60),
+				);
+				const hours = Math.floor(duration / 60);
+				const minutes = duration % 60;
+				const durationString = getDurationString(hours, minutes);
 
-			{entries
-				.filter((e) => {
-					if (selectedFilter === null) {
-						return true;
-					} else {
-						return e.type === selectedFilter;
-					}
-				})
-				.filter((e) => {
-					if (startDate && endDate) {
-						return e.dateStart >= startDate && e.dateEnd <= endDate;
-					} else if (startDate) {
-						return e.dateStart >= startDate;
-					} else if (endDate) {
-						return e.dateEnd <= endDate;
-					}
-					return true;
-				})
-				.filter((e) => {
-					if (search.trim() === "") {
-						return true;
-					}
-					const searchLower = search.toLowerCase();
-					return (
-						e.name.toLowerCase().includes(searchLower) ||
-						e.location.toLowerCase().includes(searchLower)
-					);
-				})
-				.map((e, i) => {
-					// Duration in minutes
-					const duration = Math.round(
-						(e.dateEnd.getTime() - e.dateStart.getTime()) / (1000 * 60)
-					);
-					const hours = Math.floor(duration / 60);
-					const minutes = duration % 60;
-					const durationString = getDurationString(hours, minutes);
-
-					return (
-						<Pressable
-							key={i}
-							style={({ pressed }: { pressed: boolean }) => [
-								styles.row,
-								pressed && styles.rowPressed,
-							]}
-							onPress={() => {
-								console.log(`Entry ${e.id} pressed`);
-								router.push({
-									pathname: "/editEntry",
-									params: { id: e.id.toString() },
-								});
-							}}
-						>
-							<View style={styles.iconCircle}>
-								<FontAwesome
-									name={iconMap[e.type]}
-									size={showCompressed ? 14 : 24}
-									color={colorScheme === "dark" ? Palette.white : Palette.black}
-								/>
-							</View>
-							<View style={styles.rightSection}>
-								<View style={styles.topTextContainer}>
-									{showCompressed ? (
-										<ThemedText
-											style={[styles.textType, { fontWeight: "bold" }]}
-										>
-											{e.dateStart.toLocaleString()}
-										</ThemedText>
-									) : (
-										<ThemedText type="subtitle" style={styles.textType}>
-											{e.name ? e.name : e.type}
-										</ThemedText>
-									)}
-									<ThemedText style={styles.duration}>
-										{durationString}
+				return (
+					<Pressable
+						key={i}
+						style={({ pressed }: { pressed: boolean }) => [
+							styles.row,
+							pressed && styles.rowPressed,
+						]}
+						onPress={() => {
+							console.log(`Entry ${e.id} pressed`);
+							router.push({
+								pathname: "/editEntry",
+								params: { id: e.id.toString() },
+							});
+						}}
+					>
+						<View style={styles.iconCircle}>
+							<FontAwesome
+								name={iconMap[e.type]}
+								size={showCompressed ? 14 : 24}
+								color={colorScheme === "dark" ? Palette.white : Palette.black}
+							/>
+						</View>
+						<View style={styles.rightSection}>
+							<View style={styles.topTextContainer}>
+								{showCompressed ? (
+									<ThemedText style={[styles.textType, { fontWeight: "bold" }]}>
+										{e.dateStart.toLocaleString()}
 									</ThemedText>
-								</View>
-								<View>
-									{!showCompressed && (
-										<ThemedText style={styles.dateStart}>
-											{e.dateStart.toLocaleString()}
-										</ThemedText>
-									)}
-									<ThemedText
-										style={
-											showCompressed ? styles.locationTextCompressed : undefined
-										}
-										numberOfLines={showCompressed ? 1 : undefined}
-									>
-										{e.location}
+								) : (
+									<ThemedText type="subtitle" style={styles.textType}>
+										{e.name ? e.name : e.type}
 									</ThemedText>
-								</View>
+								)}
+								<ThemedText style={styles.duration}>
+									{durationString}
+								</ThemedText>
 							</View>
-						</Pressable>
-					);
-				})}
+							<View>
+								{!showCompressed && (
+									<ThemedText style={styles.dateStart}>
+										{e.dateStart.toLocaleString()}
+									</ThemedText>
+								)}
+								<ThemedText
+									style={
+										showCompressed ? styles.locationTextCompressed : undefined
+									}
+									numberOfLines={showCompressed ? 1 : undefined}
+								>
+									{e.location}
+								</ThemedText>
+							</View>
+						</View>
+					</Pressable>
+				);
+			})}
 		</ScrollView>
 	);
 }
