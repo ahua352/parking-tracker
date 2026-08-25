@@ -87,11 +87,13 @@ export function MapDisplay({
 				lng: userLocation.longitude,
 			}).then((suggestions) => {
 				setSuggestions(suggestions);
+				console.log("Suggestions:");
 				console.log(JSON.stringify(suggestions, null, 2));
 			});
 		} else {
 			fetchAutocomplete(location).then((suggestions) => {
 				setSuggestions(suggestions);
+				console.log("Suggestions:");
 				console.log(JSON.stringify(suggestions, null, 2));
 			});
 		}
@@ -242,7 +244,8 @@ export function MapDisplay({
 			top: -6,
 			left: 0,
 			right: 0,
-			borderColor: suggestions.length > 0 ? Palette.black : "transparent",
+			borderColor:
+				suggestions && suggestions.length > 0 ? Palette.black : "transparent",
 			borderWidth: 1,
 		},
 		searchResultItem: {
