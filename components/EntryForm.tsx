@@ -46,21 +46,21 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 		container: { marginTop: 16, flexDirection: "column", gap: 16 },
 		field: { flexDirection: "column", gap: 6 },
 		fieldTitle: { fontWeight: "bold" },
-		copyDateButtonContainer: {
+		iconButtonContainer: {
 			flexDirection: "row",
 			justifyContent: "space-between",
 		},
-		copyDateButton: {
+		iconButton: {
 			alignItems: "center",
 			paddingHorizontal: 4,
 			padding: 4,
 		},
-		copyDateButtonPressed: {
+		iconButtonPressed: {
 			backgroundColor:
 				colorScheme === "dark" ? Palette.greyDark : Palette.greyLight2,
 			borderRadius: 8,
 		},
-		copyDateButtonView: {
+		iconButtonView: {
 			width: 20,
 			alignItems: "center",
 		},
@@ -288,18 +288,18 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 					</Pressable>
 				</View>
 				<View style={styles.field}>
-					<View style={styles.copyDateButtonContainer}>
+					<View style={styles.iconButtonContainer}>
 						<ThemedText style={styles.fieldTitle}>End date*</ThemedText>
 						<Pressable
 							onPress={() => {
 								setEndDate(startDate);
 							}}
 							style={({ pressed }: { pressed: boolean }) => [
-								styles.copyDateButton,
-								pressed && styles.copyDateButtonPressed,
+								styles.iconButton,
+								pressed && styles.iconButtonPressed,
 							]}
 						>
-							<View style={styles.copyDateButtonView}>
+							<View style={styles.iconButtonView}>
 								<FontAwesome
 									name={"arrow-down"}
 									size={20}
@@ -340,10 +340,10 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 					/>
 				)}
 				<View style={styles.field}>
-					<View style={styles.copyDateButtonContainer}>
+					<View style={styles.iconButtonContainer}>
 						<ThemedText style={styles.fieldTitle}>Location*</ThemedText>
-						<Pressable onPress={onOpenMap} style={styles.copyDateButton}>
-							<View style={styles.copyDateButtonView}>
+						<Pressable onPress={onOpenMap} style={styles.iconButton}>
+							<View style={styles.iconButtonView}>
 								<FontAwesome
 									name={"map"}
 									size={20}
