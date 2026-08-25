@@ -60,6 +60,10 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 				colorScheme === "dark" ? Palette.greyDark : Palette.greyLight2,
 			borderRadius: 8,
 		},
+		copyDateButtonView: {
+			width: 20,
+			alignItems: "center",
+		},
 	});
 
 	const [isMapModalVisible, setIsMapModalVisible] = useState(false);
@@ -295,7 +299,7 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 								pressed && styles.copyDateButtonPressed,
 							]}
 						>
-							<View>
+							<View style={styles.copyDateButtonView}>
 								<FontAwesome
 									name={"arrow-down"}
 									size={20}
@@ -338,8 +342,8 @@ export function EntryForm({ entry }: { entry?: Entry }) {
 				<View style={styles.field}>
 					<View style={styles.copyDateButtonContainer}>
 						<ThemedText style={styles.fieldTitle}>Location*</ThemedText>
-						<Pressable onPress={onOpenMap}>
-							<View>
+						<Pressable onPress={onOpenMap} style={styles.copyDateButton}>
+							<View style={styles.copyDateButtonView}>
 								<FontAwesome
 									name={"map"}
 									size={20}
